@@ -1,0 +1,34 @@
+{
+  "name": "joelgrondrup/silverstripe-microbizz",
+  "description": "Adds support for event handling for Microbizz in a SilverStripe environment",
+  "type": "silverstripe-vendormodule",
+  "homepage": "https://github.com/joelgrondrup/silverstripe-microbizz",
+  "keywords": ["silverstripe", "microbizz"],
+  "license": "BSD-3-Clause",
+  "authors": [
+    {
+      "name": "Joel Grøndrup","email": "joel@joel.biz"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/joelgrondrup/silverstripe-microbizz"
+  },
+  "require": {
+    "silverstripe/cms": "^6",
+    "silverstripe/framework": "^6"
+  },
+  "autoload": {
+    "psr-4": {
+      "joelgrondrup\\silverstripe-microbizz\\": "src/"
+    }
+  },
+  "extra": {
+    "installer-name": "silverstripe-microbizz",
+    "expose": [
+      "client"
+    ],
+    "screenshots": [
+      
+    ]
+  }
+}
