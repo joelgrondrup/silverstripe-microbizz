@@ -45,7 +45,7 @@ namespace {
             $action->Title = "Choose an action";
             $actionsList->add($action);
 
-            $directoryToSearch = $_SERVER["DOCUMENT_ROOT"] . "/../app/src/Webhooks/";  // Replace with your directory path
+            $directoryToSearch = $_SERVER["DOCUMENT_ROOT"] . "/../app/src/";  
             $classes = BaseWebhook::searchClassesInFiles($directoryToSearch);
 
             foreach ($classes as $classInfo) {
