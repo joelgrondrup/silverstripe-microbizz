@@ -63,12 +63,12 @@ namespace {
 
             $fields->addFieldToTab(
                 'Root.Main',
-                TextField::create('PublicKey', 'Public Key')
+                TextField::create('PublicKey', 'Public Key')->setDisabled(true)
             );
 
             $fields->addFieldToTab(
                 'Root.Main',
-                TextField::create('SecretKey', 'Secret Key')
+                TextField::create('SecretKey', 'Secret Key')->setDisabled(true)
             );
 
             $fields->addFieldsToTab(
