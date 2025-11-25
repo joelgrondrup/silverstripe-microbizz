@@ -68,7 +68,7 @@ namespace {
 
             $fields->addFieldToTab(
                 'Root.Main',
-                TextField::create('SecretKey', 'Secret Key')->setDisabled(true)
+                TextField::create('SecretKey', 'Secret Key')
             );
 
             $fields->addFieldsToTab(
