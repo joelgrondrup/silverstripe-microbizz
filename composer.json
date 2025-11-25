@@ -15,7 +15,10 @@
   },
   "require": {
     "silverstripe/cms": "^6",
-    "silverstripe/framework": "^6"
+    "silverstripe/framework": "^6",
+    "nategood/httpful": "1.0.0",
+    "lekoala/silverstripe-cms-actions": "^2.0.0",
+    "unclecheese/display-logic": "^4.0"
   },
   "autoload": {
     "psr-4": {

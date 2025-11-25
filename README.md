@@ -7,3 +7,7 @@ This module provides an interface to listen to one or more Microbizz systems, ca
 ```sh
 composer require joelgrondrup/silverstripe-microbizz
 ```
+After this run:
+```sh
+dev/build
+```
