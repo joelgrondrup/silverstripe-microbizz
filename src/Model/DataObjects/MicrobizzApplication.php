@@ -112,7 +112,7 @@ namespace {
                 $Protocol = 'http://';
             }
 
-            $MicrobizzLink = 'https://system.microbizz.dk/appconnect/';
+            $MicrobizzLink = isset($this->EndPoint) ?? 'https://system.microbizz.dk/appconnect/';
             $PublicKey = $this->PublicKey;
             $NegotiateURL = $Protocol . $_SERVER['SERVER_NAME'] . "/microbizz/negotiate/" . $this->ID;
             $ReturnURL = $Protocol . $_SERVER['SERVER_NAME'] . "/microbizz/returnurl/" . $this->ID;
