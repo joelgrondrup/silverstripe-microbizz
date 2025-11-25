@@ -5,5 +5,5 @@ This module provides an interface to listen to one or more Microbizz systems, ca
 ## Installation
 
 ```sh
-composer install joelgrondrup/silverstripe-microbizz
+composer require joelgrondrup/silverstripe-microbizz
 ```
