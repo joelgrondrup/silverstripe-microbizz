@@ -72,9 +72,14 @@ namespace {
                 if (class_exists($class) && method_exists($class, $function)){
 
                     $params = [
-                        "MicrobizzApplication" => $microbizzApplication,
-                        "MicrobizzEvent" => $microbizzEvent,
-                        "MicrobizzHook" => $microbizzHook
+                        "application" => $microbizzApplication,
+                        "event" => $microbizzEvent,
+                        "hook" => $microbizzHook,
+                        "endpoint" => $microbizzApplication->EndPoint,
+                        "contract" => $microbizzApplication->Contract,
+                        "apikey" => $microbizzApplication->AccessToken,
+                        "username" => $microbizzApplication->UserName,
+                        "password" => $microbizzApplication->Password
                     ];
 
                     $class::$function($_POST, $params, $microbizzEvent);
