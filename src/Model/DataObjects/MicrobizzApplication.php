@@ -52,28 +52,15 @@ namespace {
             
             $fields = parent::getCMSFields();
 
+            $fields->removeByName("Main");
             $fields->removeByName("MicrobizzHooks");
-
-            $config = GridFieldConfig_RecordEditor::create();
-
-            $fields->addFieldToTab(
-                'Root.Hooks',
-                $hooksGridField = GridField::create('MicrobizzHooks', 'Microbizz webhooks', $this->MicrobizzHooks(), $config)
-            );
-
-            $fields->addFieldToTab(
-                'Root.Main',
-                TextField::create('PublicKey', 'Public Key')
-            );
-
-            $fields->addFieldToTab(
-                'Root.Main',
-                TextField::create('SecretKey', 'Secret Key')
-            );
 
             $fields->addFieldsToTab(
                 'Root.Config',
                 [
+                    TextField::create('Title', 'Title'),
+                    TextField::create('PublicKey', 'Public Key'),
+                    TextField::create('SecretKey', 'Secret Key'),
                     LiteralField::create("Api", "API information"),
                     TextField::create('EndPoint', 'EndPoint', 'https://system.microbizz.dk/api/endpoint.php'),
                     TextField::create('Contract','Contract','1234'),
@@ -81,6 +68,13 @@ namespace {
                     TextField::create('UserName','Username','youremail@email.com'),
                     PasswordField::create('Password','Password','your-password')   
                 ]
+            );
+
+            $config = GridFieldConfig_RecordEditor::create();
+
+            $fields->addFieldToTab(
+                'Root.Hooks',
+                $hooksGridField = GridField::create('MicrobizzHooks', 'Microbizz webhooks', $this->MicrobizzHooks(), $config)
             );
 
             return $fields;
