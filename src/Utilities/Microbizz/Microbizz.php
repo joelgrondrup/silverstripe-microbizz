@@ -2,19 +2,11 @@
 
 namespace {
 
-    /*
-    use SilverStripe\CMS\Controllers\ContentController;
-    use SilverStripe\ORM\ArrayList;
-    use SilverStripe\ORM\DataObject;
-    use SilverStripe\View\Requirements;
-    use SilverStripe\Security\Member;
-    use SilverStripe\Security\Permission;
-    */
     use \Httpful\Request;
 
     class Microbizz  {
 
-        private $URI = 'https://system.microbizz.dk/api/endpoint.php';
+        private $endpoint;
 
         private $contract;
 
@@ -24,17 +16,14 @@ namespace {
 
         private $password;
         
-        public function __construct($contract, $apikey, $username, $password, $URI = false) {
+        public function __construct($endpoint, $contract, $apikey, $username, $password, $URI = false) {
 
+            $this->endpoint = $endpoint;
             $this->contract = $contract;
             $this->api = $apikey;
             $this->username = $username;
             $this->password = $password;
             
-            if (!$URI){
-                $this->URI = $URI;
-            }
-
         }
 
         private function makeCommand($command){
@@ -56,7 +45,7 @@ namespace {
 
             $bodyString = "json=" . urlencode($string);
 
-            $response = Request::post($this->URI)
+            $response = Request::post($this->endpoint)
                 ->expectsJson()
                 ->addHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
                 ->body($bodyString)
@@ -66,7 +55,7 @@ namespace {
 
         }
 
-        public function query($request, $params){
+        public function query($request){
 
             $command = $this->makeCommand($request); 
             $response = $this->makeRequest($command);
@@ -76,7 +65,5 @@ namespace {
         }
 
     }
-
-
 
 }
