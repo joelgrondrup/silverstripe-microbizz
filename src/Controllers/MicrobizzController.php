@@ -75,7 +75,6 @@ namespace {
                         "application" => $microbizzApplication,
                         "event" => $microbizzEvent,
                         "hook" => $microbizzHook,
-                        "endpoint" => $microbizzApplication->EndPoint,
                         "contract" => $microbizzApplication->Contract,
                         "apikey" => $microbizzApplication->AccessToken,
                         "username" => $microbizzApplication->UserName,

@@ -6,7 +6,7 @@ namespace {
 
     class Microbizz  {
 
-        private $endpoint;
+        private $endpoint = "https://system.microbizz.dk/api/endpoint.php";
 
         private $contract;
 
@@ -16,9 +16,8 @@ namespace {
 
         private $password;
         
-        public function __construct($endpoint, $contract, $apiKey, $username, $password) {
+        public function __construct($contract, $apiKey, $username, $password) {
 
-            $this->endpoint = $endpoint;
             $this->contract = $contract;
             $this->apiKey = $apiKey;
             $this->username = $username;

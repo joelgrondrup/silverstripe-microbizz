@@ -136,8 +136,6 @@ namespace {
 
             $RedirectUrl = $MicrobizzLink . '?request=' . json_encode($RequestData);
 
-            error_log($RedirectUrl);
-
             header('Location: ' . $RedirectUrl);
             exit;
 
