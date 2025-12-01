@@ -59,12 +59,14 @@ namespace {
                 'Root.Config',
                 [
                     TextField::create('Title', 'Title'),
+                    LiteralField::create("Developer", "<h2>Developer information</h2>"),
                     TextField::create('PublicKey', 'Public Key'),
                     TextField::create('SecretKey', 'Secret Key'),
-                    LiteralField::create("Api", "API information"),
+                    LiteralField::create("Api", "<h2>API information</h2>"),
                     TextField::create('EndPoint', 'EndPoint', 'https://system.microbizz.dk/api/endpoint.php'),
                     TextField::create('Contract','Contract','1234'),
                     TextField::create('AccessToken','Access token','1234-1234-1234-1234-1234-1234-1234'),
+                    LiteralField::create("Api", "<h2>User information</h2>"),
                     TextField::create('UserName','Username','youremail@email.com'),
                     PasswordField::create('Password','Password','your-password')   
                 ]

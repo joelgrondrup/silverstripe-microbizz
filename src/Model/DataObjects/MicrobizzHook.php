@@ -38,6 +38,8 @@ namespace {
             
             $fields = parent::getCMSFields();
 
+            $fields->removeByName("MicrobizzApplicationID");
+
             $actionsList = ArrayList::create();
 
             $action = ArrayData::create();
