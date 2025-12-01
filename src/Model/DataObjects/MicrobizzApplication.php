@@ -65,7 +65,7 @@ namespace {
                     LiteralField::create("Api", "<h2>API information</h2>"),
                     TextField::create('EndPoint', 'EndPoint', 'https://system.microbizz.dk/api/endpoint.php'),
                     TextField::create('Contract','Contract','1234'),
-                    TextField::create('AccessToken','Access token','1234-1234-1234-1234-1234-1234-1234'),
+                    TextField::create('AccessToken','API key','1234-1234-1234-1234-1234-1234-1234'),
                     LiteralField::create("Api", "<h2>User information</h2>"),
                     TextField::create('UserName','Username','youremail@email.com'),
                     PasswordField::create('Password','Password','your-password')   

@@ -10,17 +10,17 @@ namespace {
 
         private $contract;
 
-        private $api;
+        private $apiKey;
                     
         private $username;
 
         private $password;
         
-        public function __construct($endpoint, $contract, $apikey, $username, $password, $URI = false) {
+        public function __construct($endpoint, $contract, $apikey, $username, $password) {
 
             $this->endpoint = $endpoint;
             $this->contract = $contract;
-            $this->api = $apikey;
+            $this->apiKey = $apikey;
             $this->username = $username;
             $this->password = $password;
             
@@ -30,7 +30,7 @@ namespace {
 
             return json_encode([
                 "contract" => $this->contract,
-                "apikey" => $this->api,
+                "apikey" => $this->apiKey,
                 "username" => $this->username,
                 "password" => $this->password,
                 "commands" => [
