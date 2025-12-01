@@ -77,7 +77,7 @@ namespace {
                         "MicrobizzHook" => $microbizzHook
                     ];
 
-                    $class::$function($_POST, $params);
+                    $class::$function($_POST, $params, $microbizzEvent);
                     error_log("MicrobizzWebhoook handle fired with class: " . $class . " and static method: " . $function);
 
                 }
