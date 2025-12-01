@@ -41,7 +41,16 @@ class TodoWebhooks extends BaseWebhook {
 
         //Do stuff
 
+        $event->Log .= "Closed todo with id {$data['id']}";
+        $event->write();
+
     }
 
 }
 ```
+
+Any extension of the BaseWebhook should receive three parameters: data, params and event. Data is the data that is sent from Microbizz (i.e. a customer or todo object), params is an array with the parameters from the Microbizz application and the event is the MicrobizzEvent object in SilverStripe which you can use to add information to the log in the CMS. This is especially useful for debugging and for explaining what happened.
+
+## License
+
+This module is licensed under the MIT license. 
