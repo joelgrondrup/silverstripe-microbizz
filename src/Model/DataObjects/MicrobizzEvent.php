@@ -60,6 +60,11 @@ class MicrobizzEvent extends DataObject {
 		$PostField->setReadonly(true);
         $PostField->setRows(10);
         $fields->addFieldToTab('Root.POST', $PostField);
+        
+        $LogField = new TextareaField("Log");
+		$LogField->setReadonly(true);
+        $LogField->setRows(10);
+        $fields->addFieldToTab('Root.Log', $LogField);
 
 		return $fields;
 		
