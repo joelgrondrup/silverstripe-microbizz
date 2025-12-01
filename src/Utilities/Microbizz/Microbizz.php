@@ -16,11 +16,11 @@ namespace {
 
         private $password;
         
-        public function __construct($endpoint, $contract, $apikey, $username, $password) {
+        public function __construct($endpoint, $contract, $apiKey, $username, $password) {
 
             $this->endpoint = $endpoint;
             $this->contract = $contract;
-            $this->apiKey = $apikey;
+            $this->apiKey = $apiKey;
             $this->username = $username;
             $this->password = $password;
             
