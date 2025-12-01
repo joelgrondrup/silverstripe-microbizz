@@ -19,7 +19,7 @@ class BaseWebhook {
                         }
                     }
                 } catch (Exception $e) {
-                    echo "Could not read file $filePath: ", $e->getMessage(), "\n";
+                    error_log("Could not read file $filePath: " . $e->getMessage() . "\n");
                 }
             }
         }

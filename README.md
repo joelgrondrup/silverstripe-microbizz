@@ -39,7 +39,7 @@ class TodoWebhooks extends BaseWebhook {
 
     static function closeTodosWhenControlled($data, $params, $event) {
 
-        
+        //Do stuff
 
     }
 

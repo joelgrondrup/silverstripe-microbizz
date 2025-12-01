@@ -5,8 +5,6 @@ namespace {
     use SilverStripe\Forms\DropdownField;
     use SilverStripe\ORM\ArrayList;
     use SilverStripe\ORM\DataObject;
-    use SilverStripe\Admin\ModelAdmin;
-    use SilverStripe\Forms\TextareaField;
     use SilverStripe\View\ArrayData;
 
     class MicrobizzHook extends DataObject {
@@ -35,7 +33,7 @@ namespace {
         private static $default_sort = "Title ASC";
         
         function getCMSFields() {
-            
+
             $fields = parent::getCMSFields();
 
             $fields->removeByName("MicrobizzApplicationID");
@@ -46,10 +44,10 @@ namespace {
             $action->ID = "";
             $action->Title = "Choose an action";
             $actionsList->add($action);
-
+            
             $directoryToSearch = $_SERVER["DOCUMENT_ROOT"] . "/../app/src/";  
             $classes = BaseWebhook::searchClassesInFiles($directoryToSearch);
-
+            
             foreach ($classes as $classInfo) {
                 
                 //echo "Class '{$classInfo['class']}' found in {$classInfo['file']}\n";
