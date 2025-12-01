@@ -25,7 +25,7 @@ namespace {
             $id = isset($params['ID']) ? $params['ID'] : false;
             $otherId = isset($params['OtherID']) ? $params['OtherID'] : false;
 
-            error_log('Microbizz hook fired with ID: ' . $id . " and OtherID: " . $otherId);
+            //error_log('Microbizz hook fired with ID: ' . $id . " and OtherID: " . $otherId);
 
             $microbizzApplication = \MicrobizzApplication::get_by_id($id);
 
