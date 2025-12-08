@@ -93,6 +93,12 @@ namespace {
 
             $actions->push($activateWebhooksLink);
 
+            $activateInterfacesLink = new CustomLink('activateInterfaces','Activate interfaces');
+            $activateInterfacesLink->setButtonIcon(SilverStripeIcons::ICON_SLIDERS);
+            $activateInterfacesLink->setNewWindow(true);
+
+            $actions->push($activateInterfacesLink);
+
             return $actions;
         }
 
@@ -123,6 +129,54 @@ namespace {
                     'title' => $MicrobizzHook->Title,
                     'url' => $Protocol . $_SERVER['SERVER_NAME'] . '/microbizz/webhook/' . $this->ID . '/' . $MicrobizzHook->ID
                 ];
+
+                array_push($Hooks, $Hook);
+            }
+
+            $RequestData = [
+                'publicid' => $PublicKey,
+                'negotiateurl' => $NegotiateURL,
+                'returnurl' => $ReturnURL,
+                'hooks' => $Hooks
+            ];
+
+            $RedirectUrl = $MicrobizzLink . '?request=' . json_encode($RequestData);
+
+            header('Location: ' . $RedirectUrl);
+            exit;
+
+        }
+
+        public function activateInterfaces($request) {
+
+            if (isset($_SERVER['HTTPS']) &&
+                ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) ||
+                isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
+                $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
+                $Protocol = 'https://';
+            }
+            else {
+                $Protocol = 'http://';
+            }
+
+            $MicrobizzLink = isset($this->EndPoint) ?? 'https://system.microbizz.dk/appconnect/';
+            $PublicKey = $this->PublicKey;
+            $NegotiateURL = $Protocol . $_SERVER['SERVER_NAME'] . "/microbizz/negotiate/" . $this->ID;
+            $ReturnURL = $Protocol . $_SERVER['SERVER_NAME'] . "/microbizz/returnurl/" . $this->ID;
+
+            $Hooks = [];
+
+            foreach ($this->MicrobizzInterfaces() as $MicrobizzInterface) {
+
+                $Hook = [
+                    'modcode' => $MicrobizzInterface->ModCode,
+                    'hook' => $MicrobizzInterface->Hook,
+                    'title' => $MicrobizzInterface->Title,
+                    'url' => $Protocol . $_SERVER['SERVER_NAME'] . '/microbizz/interface/' . $this->ID . '/' . $MicrobizzInterface->ID
+                ];
+
+                error_log("Creating interfaces");
+                error_log(json_encode($Hook));
 
                 array_push($Hooks, $Hook);
             }
