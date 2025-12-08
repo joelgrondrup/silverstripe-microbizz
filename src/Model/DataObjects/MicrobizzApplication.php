@@ -78,12 +78,12 @@ namespace {
 
             $fields->addFieldToTab(
                 'Root.Hooks',
-                $hooksGridField = GridField::create('MicrobizzHooks', 'Microbizz webhooks', $this->MicrobizzHooks(), $config)
+                GridField::create('MicrobizzHooks', 'Microbizz webhooks', $this->MicrobizzHooks(), $config)
             );
 
             $fields->addFieldToTab(
                 'Root.Interfaces',
-                $hooksGridField = GridField::create('MicrobizzInterfaces', 'Microbizz interfaces', $this->MicrobizzInterfaces(), $config)
+                GridField::create('MicrobizzInterfaces', 'Microbizz interfaces', $this->MicrobizzInterfaces(), $config)
             );
 
             return $fields;
