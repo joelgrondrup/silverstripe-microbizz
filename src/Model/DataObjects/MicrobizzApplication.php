@@ -39,7 +39,8 @@ namespace {
         );
 
         private static $has_many = array (
-            'MicrobizzHooks' => 'MicrobizzHook'
+            'MicrobizzHooks' => 'MicrobizzHook',
+            'MicrobizzInterfaces' => 'MicrobizzInterface'
         );
         
         private static $summary_fields = array(
@@ -54,6 +55,7 @@ namespace {
 
             $fields->removeByName("Main");
             $fields->removeByName("MicrobizzHooks");
+            $fields->removeByName("MicrobizzInterfaces");
 
             $fields->addFieldsToTab(
                 'Root.Config',
@@ -77,6 +79,11 @@ namespace {
             $fields->addFieldToTab(
                 'Root.Hooks',
                 $hooksGridField = GridField::create('MicrobizzHooks', 'Microbizz webhooks', $this->MicrobizzHooks(), $config)
+            );
+
+            $fields->addFieldToTab(
+                'Root.Interfaces',
+                $hooksGridField = GridField::create('MicrobizzInterfaces', 'Microbizz interfaces', $this->MicrobizzInterfaces(), $config)
             );
 
             return $fields;
