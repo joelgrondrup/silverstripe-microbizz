@@ -14,7 +14,8 @@ class MicrobizzEvent extends DataObject {
         'Hook' => 'Text',
         'Contract' => 'Text',
         'POST' => 'Text',
-        'Log' => 'Text'
+        'Log' => 'Text',
+        'Title' => 'Text'
     );
 	
     private static $has_one = [
@@ -25,7 +26,8 @@ class MicrobizzEvent extends DataObject {
         'ModCode' => 'Type',
         'Hook' => 'Hook',
         'Created' => 'Created',
-        'Contract' => 'Contract'
+        'Contract' => 'Contract',
+        'Title' => 'Title'
     );
 	
     private static $default_sort = "Created DESC";
@@ -35,6 +37,8 @@ class MicrobizzEvent extends DataObject {
         $fields = parent::getCMSFields();
 
         $fields->removeByName("MicrobizzHookID");
+
+        $fields->addFieldToTab('Root.Main', TextField::create("Title"));
 		
 		$MicrobizzApplicationTextField = new TextField("MicrobizzApplication");
 		$MicrobizzApplicationTextField->setReadonly(true);
