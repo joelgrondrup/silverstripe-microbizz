@@ -104,6 +104,11 @@ namespace {
             error_log('Microbizz interface fired with ID: ' . $id . " and OtherID: " . $otherId);
 
             print_r("HELLO WORLD");
+            print_r(json_encode($params));
+
+            $url = "http" . (($_SERVER['SERVER_PORT'] == 443) ? "s" : "") . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+
+            print_r($url);
 
             /*
             $microbizzApplication = \MicrobizzApplication::get_by_id($id);
