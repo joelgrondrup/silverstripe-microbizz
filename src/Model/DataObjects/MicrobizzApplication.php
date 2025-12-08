@@ -182,9 +182,6 @@ namespace {
                     'url' => $Protocol . $_SERVER['SERVER_NAME'] . '/microbizz/interface/' . $this->ID . '/' . $MicrobizzInterface->ID
                 ];
 
-                error_log("Creating interfaces");
-                error_log(json_encode($Hook));
-
                 array_push($Hooks, $Hook);
             }
 
@@ -195,7 +192,12 @@ namespace {
                 'hooks' => $Hooks
             ];
 
+            error_log("Creating interfaces");
+            error_log(json_encode($RequestData));
+
             $RedirectUrl = $MicrobizzLink . '?request=' . json_encode($RequestData);
+
+            error_log("Redirect url: " . $RedirectUrl);
 
             header('Location: ' . $RedirectUrl);
             exit;
