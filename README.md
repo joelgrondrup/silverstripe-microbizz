@@ -71,6 +71,8 @@ class TodoWebhooks extends BaseWebhook {
 }
 ```
 
+When you have created your custom function, it will automatically appear in the "Actions" dropdown menu.
+
 ![Field for customs webhook functions](docs/images/doc-image-3.png)
 
 Every extension of the BaseWebhook should accept three parameters: data, params, and event. Data represents the information sent from Microbizz, params is an array of parameters from the Microbizz application, and event is the MicrobizzEvent object in SilverStripe. Modify the log in the CMS using this, which is particularly useful for debugging and detailing what transpired.
