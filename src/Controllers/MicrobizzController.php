@@ -80,7 +80,8 @@ namespace {
                         "contract" => $microbizzApplication->Contract,
                         "apikey" => $microbizzApplication->AccessToken,
                         "username" => $microbizzApplication->UserName,
-                        "password" => $microbizzApplication->Password
+                        "password" => $microbizzApplication->Password,
+                        "accesstoken" => $microbizzApplication->AccessToken
                     ];
 
                     $class::$function($_POST, $params, $microbizzEvent);
@@ -118,7 +119,7 @@ namespace {
             }
 
             //Let's setup the security here
-            $microbizz = new Microbizz($microbizzApplication->Endpoint, $microbizzApplication->Contract, $microbizzApplication->APIKey, $microbizzApplication->UserName, $microbizzApplication->Password);
+            $microbizz = new Microbizz($microbizzApplication->Endpoint, $microbizzApplication->Contract, $microbizzApplication->APIKey, $microbizzApplication->UserName, $microbizzApplication->Password, $microbizzApplication->AccessToken);
             $result = $microbizz->validateSessionToken($sessionToken);
 
             if ($result->body->result != 1){

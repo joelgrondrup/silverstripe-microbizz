@@ -15,14 +15,17 @@ namespace {
         private $username;
 
         private $password;
+
+        private $accessToken;
         
-        public function __construct($endpoint, $contract, $apiKey, $username, $password) {
+        public function __construct($endpoint, $contract, $apiKey, $username, $password, $accessToken) {
 
             $this->endpoint = $endpoint;
             $this->contract = $contract;
             $this->apiKey = $apiKey;
             $this->username = $username;
             $this->password = $password;
+            $this->accessToken = $accessToken;
             
         }
 
@@ -33,7 +36,7 @@ namespace {
                 "apikey" => $this->apiKey,
                 "username" => $this->username,
                 "password" => $this->password,
-                "accesstoken" => "fabaa112c8c9c4d055a9bdda18931ca24fa366e4",
+                "accesstoken" => $this->accessToken,
                 "commands" => [
                     $command 
                     ]
