@@ -31,6 +31,8 @@ You must conduct a handshake with Microbizz to receive an access token, contract
 
 After a successful handshake, the access token, endpoint, and contract fields should be populated.
 
+![Image of fields for access token, endpoint, and contract](docs/images/doc-image-4.jpg)
+
 ### Enter User Information for API Requests
 
 🔑 **API Credentials**  
