@@ -76,6 +76,7 @@ namespace {
                         "application" => $microbizzApplication,
                         "event" => $microbizzEvent,
                         "hook" => $microbizzHook,
+                        "endpoint" => $microbizzApplication->EndPoint,
                         "contract" => $microbizzApplication->Contract,
                         "apikey" => $microbizzApplication->AccessToken,
                         "username" => $microbizzApplication->UserName,
@@ -117,7 +118,7 @@ namespace {
             }
 
             //Let's setup the security here
-            $microbizz = new Microbizz($microbizzApplication->Contract, $microbizzApplication->APIKey, $microbizzApplication->UserName, $microbizzApplication->Password);
+            $microbizz = new Microbizz($microbizzApplication->Endpoint, $microbizzApplication->Contract, $microbizzApplication->APIKey, $microbizzApplication->UserName, $microbizzApplication->Password);
             $result = $microbizz->validateSessionToken($sessionToken);
 
             if ($result->body->result != 1){

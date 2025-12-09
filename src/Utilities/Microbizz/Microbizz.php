@@ -16,8 +16,9 @@ namespace {
 
         private $password;
         
-        public function __construct($contract, $apiKey, $username, $password) {
+        public function __construct($endpoint, $contract, $apiKey, $username, $password) {
 
+            $this->endpoint = $endpoint;
             $this->contract = $contract;
             $this->apiKey = $apiKey;
             $this->username = $username;
