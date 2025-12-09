@@ -23,10 +23,10 @@ class MicrobizzEvent extends DataObject {
     ];
 
     private static $summary_fields = array(
-        'ModCode' => 'Type',
-        'Hook' => 'Hook',
         'Created' => 'Created',
         'Contract' => 'Contract',
+        'ModCode' => 'Type',
+        'Hook' => 'Hook',
         'Title' => 'Title'
     );
 	
