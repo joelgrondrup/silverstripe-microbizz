@@ -105,12 +105,6 @@ namespace {
             $sessionToken = isset($_GET['sessiontoken']) ? $_GET['sessiontoken'] : false;
             $accessToken = isset($_GET['accesstoken']) ? $_GET['accesstoken'] : false;
 
-            //$url = "http" . (($_SERVER['SERVER_PORT'] == 443) ? "s" : "") . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-
-            error_log('Microbizz interface fired with ID: ' . $id . " and OtherID: " . $otherId);
-            error_log("Sessiontoken: " . $sessionToken);
-            error_log("Acccesstoken: " . $accessToken);
-
             $microbizzApplication = \MicrobizzApplication::get_by_id($id);
 
             if (!$microbizzApplication) {
@@ -137,6 +131,36 @@ namespace {
             if (!$microbizzInterface) {
                 error_log('Microbizz interface not found');
                 return $this->httpError(200);
+            }
+
+            if (!empty($microbizzInterface->Handle)){
+
+                $handleArray = explode('::', $microbizzInterface->Handle);
+                $class = $handleArray[0];
+                $function = $handleArray[1];
+
+                if (class_exists($class) && method_exists($class, $function)){
+
+                    $params = [
+                        "application" => $microbizzApplication,
+                        "sessiontokenresult" => $result,
+                        "interface" => $microbizzInterface,
+                        "endpoint" => $microbizzApplication->EndPoint,
+                        "contract" => $microbizzApplication->Contract,
+                        "apikey" => $microbizzApplication->AccessToken,
+                        "username" => $microbizzApplication->UserName,
+                        "password" => $microbizzApplication->Password,
+                        "accesstoken" => $microbizzApplication->AccessToken
+                    ];
+
+                    $class::$function($_GET, $params);
+                    //error_log("MicrobizzWebhoook handle fired with class: " . $class . " and static method: " . $function);
+
+                }
+
+            }
+            else{
+                error_log('MicrobizzWebhook reached, but no handle was fired');
             }
 
             return "Hello world";

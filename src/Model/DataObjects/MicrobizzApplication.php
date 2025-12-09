@@ -96,7 +96,7 @@ namespace {
         {
             $actions = parent::getCMSActions();
 
-            $activateHooksAndInterfacesLink = new CustomLink('activateWebhooksAndInterfaces','Activate hooks and interfaces');
+            $activateHooksAndInterfacesLink = new CustomLink('activateApplication','Activate');
             $activateHooksAndInterfacesLink->setButtonIcon(SilverStripeIcons::ICON_EXPORT);
             $activateHooksAndInterfacesLink->setNewWindow(false);
 
@@ -105,7 +105,7 @@ namespace {
             return $actions;
         }
 
-        public function activateWebhooksAndInterfaces($request) {
+        public function activateApplication($request) {
 
             if (isset($_SERVER['HTTPS']) &&
                 ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) ||
