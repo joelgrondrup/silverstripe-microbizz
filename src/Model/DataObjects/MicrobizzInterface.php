@@ -46,7 +46,7 @@ namespace {
             $actionsList->add($action);
             
             $directoryToSearch = $_SERVER["DOCUMENT_ROOT"] . "/../app/src/";  
-            $classes = BaseInterface::searchClassesInFiles($directoryToSearch);
+            $classes = DirectoryHelper::searchClassesInFiles($directoryToSearch);
             
             foreach ($classes as $classInfo) {
                 
@@ -58,14 +58,10 @@ namespace {
                     
                     foreach ($methods as $method) {
                         
-                        if ($method->getName() != 'searchClassesInFiles'){
-
-                            $action = ArrayData::create();
-                            $action->ID = $classInfo['class'] . "::" . $method->getName();
-                            $action->Title = $classInfo['class'] . "::" . $method->getName();
-                            $actionsList->add($action);
-
-                        }
+                        $action = ArrayData::create();
+                        $action->ID = $classInfo['class'] . "::" . $method->getName();
+                        $action->Title = $classInfo['class'] . "::" . $method->getName();
+                        $actionsList->add($action);
 
                     }
 
