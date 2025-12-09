@@ -48,7 +48,7 @@ namespace {
         private function makeRequest($string){
 
             $bodyString = "json=" . urlencode($string);
-
+            error_log("Sending request to endpoint: " . $this->endpoint);
             $response = Request::post($this->endpoint)
                 ->expectsJson()
                 ->addHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
@@ -59,9 +59,9 @@ namespace {
 
         }
 
-        public function query($request){
+        public function query($query){
 
-            $command = $this->makeCommand($request); 
+            $command = $this->makeCommand($query); 
             $response = $this->makeRequest($command);
 
             return $response;
