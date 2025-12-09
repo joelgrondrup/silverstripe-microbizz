@@ -72,7 +72,7 @@ namespace {
                     LiteralField::create("UserInformation", "<h2>User information for api requests</h2>"),
                     TextField::create('UserName','Username','youremail@email.com'),
                     TextField::create('APIKey', 'API key', 'your api key'),
-                    PasswordField::create('Password','Password','your-password')   
+                    TextField::create('Password','Password','your-password')   
                 ]
             );
 
