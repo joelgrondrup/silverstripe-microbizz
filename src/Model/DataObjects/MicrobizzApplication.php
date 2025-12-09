@@ -97,7 +97,7 @@ namespace {
 
             $activateHooksAndInterfacesLink = new CustomLink('activateWebhooksAndInterfaces','Activate hooks and interfaces');
             $activateHooksAndInterfacesLink->setButtonIcon(SilverStripeIcons::ICON_EXPORT);
-            $activateHooksAndInterfacesLink->setNewWindow(true);
+            $activateHooksAndInterfacesLink->setNewWindow(false);
 
             $actions->push($activateHooksAndInterfacesLink);
 
