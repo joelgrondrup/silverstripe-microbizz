@@ -33,6 +33,7 @@ namespace {
                 "apikey" => $this->apiKey,
                 "username" => $this->username,
                 "password" => $this->password,
+                "accesstoken" => "fabaa112c8c9c4d055a9bdda18931ca24fa366e4",
                 "commands" => [
                     $command 
                     ]
