@@ -1,41 +1,52 @@
 ## Overview
 
-This module provides an interface to listen to one or more [Microbizz systems](https://microbizz.com/en), catch [complex objects](https://micropedia.microbizz.com/tec/complex-types) when commands are fired and act upon them. You can also create your own interface endpoints to create iframes in the Microbizz CRM-system.
+🔌 **Connect to Microbizz**  
+This module provides an interface to listen to one or more [Microbizz systems](https://microbizz.com/en), capture [complex objects](https://micropedia.microbizz.com/tec/complex-types) when commands are issued, and act upon them. You can also create custom interface endpoints to embed iframes in the Microbizz CRM system.
 
 ## Installation
 
+📦 **Install via Composer**  
+Run the following command to install the module:
+
 ```sh
 composer require joelgrondrup/silverstripe-microbizz
+
 ```
 After this run:
+
 ```sh
 dev/build
 ```
-## Configuration
+🛠 **Configure the CMS**  
+Once the database is built, you will see a button labeled "Microbizz Applications" in the CMS. Start by creating a Microbizz Application in the CMS by entering a public and secret key. Contact [Ventu](https://micropedia.microbizz.com/tec/making-a-microbizz-app) commercial support to obtain these keys.
 
-After building the database you should have a button in the CMS called "Microbizz Applications".
-First create a Microbizz Application in the CMS by inserting a public and secret key (contact [Ventu](https://micropedia.microbizz.com/tec/making-a-microbizz-app) commercial support for these keys).
+### Activate Application
 
-### Activate application
-After this you must make a handshake with Microbizz to get an access token, contract id and endpoint url. To do this just click on "Activate" and follow the instructions. (If you want to you can fill out hooks and interfaces before activating, but you can also activate them afterwards.)
+🔗 **Establish Connection**  
+You must conduct a handshake with Microbizz to receive an access token, contract ID, and endpoint URL. Click "Activate" and follow the instructions. You may fill out hooks and interfaces before activating, but this can also be completed afterward.
 
-If everything went well you should see the fields with access token, endpoint and contract filled out.
+After a successful handshake, the access token, endpoint, and contract fields should be populated.
 
-### Enter user information for api requests
-After this, finish the configuration by filling out an apikey, username and password created in the matching Microbizz-system. This can be useful later when you make extensions to hooks and interfaces.
+### Enter User Information for API Requests
+
+🔑 **API Credentials**  
+Complete the configuration by providing an API key, username, and password, which should be created in the corresponding Microbizz system. This information will be beneficial when extending hooks and interfaces.
 
 ## Hooks for Event Endpoints
-To grab your first event objects from Microbizz you must create a webhook and fill out a mod and a hook code. Remember that the hooks are used for getting event endpoint types.
 
-You can add as many hooks as you want to. Available events can be found [here](https://micropedia.microbizz.com/tec/making-a-microbizz-app#MakingaMicrobizzapp-Programmingendpoints). After adding event hooks you can activate them by clicking on the button "Activate" and go through the form again at Microbizz. 
+🔔 **Receive Events**  
+To capture your first event objects from Microbizz, create a webhook and provide a mod and a hook code. Remember, hooks are necessary for obtaining event endpoint types.
 
-Once you receive data from Microbizz you can either use the "Event log" tab to see all data that is coming from Microbizz or you can go into each separate hook to view events only for the specific webhook. 
+You can add as many hooks as needed. Available events are listed [here](https://micropedia.microbizz.com/tec/making-a-microbizz-app#MakingaMicrobizzapp-Programmingendpoints). After adding event hooks, activate them by clicking "Activate" and follow the form in Microbizz.
 
-### Working with Event data 
+Once data is received from Microbizz, use the "Event log" tab to view all incoming data, or check individual hooks to view events specific to each webhook.
 
-For every hook you can create your own functions that will be called when the hook is fired. All possible actions will automatically be listed in a dropdown under the "Actions" tab. To create a function you must create a class that extends the BaseWebhook class and add one or more static functions to it.
+### Working with Event Data
 
-### Example
+⚙️ **Customize Functionality**  
+For each hook, you can craft custom functions that will be triggered when the hook is activated. All possible actions are listed in a dropdown under the "Actions" tab. To create these functions, extend the `BaseWebhook` class and add static functions.
+
+#### Example
 
 ```php
 <?php
@@ -44,9 +55,9 @@ class TodoWebhooks extends BaseWebhook {
 
     static function closeTodosWhenControlled($data, $params, $event) {
 
-        //Do stuff
+        // Perform actions
 
-        $event->Log .= "Closed todo with id {$data['id']}";
+        $event->Log .= "Closed todo with ID {$data['id']}";
         $event->write();
 
     }
@@ -54,13 +65,14 @@ class TodoWebhooks extends BaseWebhook {
 }
 ```
 
-Any extension of the BaseWebhook should receive three parameters: data, params and event. Data is the data that is sent from Microbizz (i.e. a customer or todo object), params is an array with the parameters from the Microbizz application and the event is the MicrobizzEvent object in SilverStripe which you can use to add information to the log in the CMS. This is especially useful for debugging and for explaining what happened.
+Every extension of the BaseWebhook should accept three parameters: data, params, and event. Data represents the information sent from Microbizz, params is an array of parameters from the Microbizz application, and event is the MicrobizzEvent object in SilverStripe. Modify the log in the CMS using this, which is particularly useful for debugging and detailing what transpired.
 
 ## Interface Endpoints
 
-Interface endpoints are iframes that are placed into the Microbizz CRM-system in different places. They are named "interface" in the [documentation](https://micropedia.microbizz.com/tec/making-a-microbizz-app#MakingaMicrobizzapp-Programmingendpoints). To create an interface endpoint, you need to create a class that extends the BaseInterfaceEndpoint class. This class should have a static function that receives three parameters: data and params.
+🎛 **Embed Interfaces**  
+Interface endpoints are iframes embedded within the Microbizz CRM system at various locations. They are referred to as "interfaces" in the [documentation](https://micropedia.microbizz.com/tec/making-a-microbizz-app#MakingaMicrobizzapp-Programmingendpoints). To create an interface endpoint, extend the `BaseInterfaceEndpoint` class and implement a static function with parameters: `data` and `params`.
 
-The data is the GET parameters from the iframe and params is an array with the parameters from the Microbizz application. The params variable also holds the sessiontokenresult, interface and application objects.
+`Data` includes the GET parameters from the iframe, while `params` is an array that contains the Microbizz application parameters, session token result, interface, and application objects.
 
 ### Example
 
@@ -84,4 +96,5 @@ class TodoInterface extends BaseInterface {
 
 ## License
 
-This module is licensed under the MIT license. 
+📜 **MIT License**  
+This module is licensed under the MIT license.
