@@ -135,8 +135,6 @@ namespace {
 
             if (!empty($microbizzInterface->Handle)){
 
-                error_log("Calling Microbizz handle");
-
                 $handleArray = explode('::', $microbizzInterface->Handle);
                 $class = $handleArray[0];
                 $function = $handleArray[1];

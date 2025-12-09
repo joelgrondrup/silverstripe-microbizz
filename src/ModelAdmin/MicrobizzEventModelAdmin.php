@@ -1,9 +1,7 @@
 <?php
 
-use SilverStripe\ORM\DataObject;
 use SilverStripe\Admin\ModelAdmin;
-use SilverStripe\Forms\TextareaField;
-use SilverStripe\Forms\TextField;
+use Colymba\BulkManager\BulkManager;
 
 class MicrobizzEventsModelAdmin extends ModelAdmin 
 {
@@ -15,5 +13,17 @@ class MicrobizzEventsModelAdmin extends ModelAdmin
     private static $url_segment = 'eventlogs';
 
     private static $menu_title = 'Event logs';
+
+    public function getEditForm($id = null, $fields = null)
+    {
+        $form = parent::getEditForm($id, $fields);
+
+        $grid = $form->Fields()->fieldByName($this->sanitiseClassName(MicrobizzEvent::class));
+
+        $config = $grid->getConfig();
+        $config->addComponent(new BulkManager());
+
+        return $form;
+    }
     
 }
