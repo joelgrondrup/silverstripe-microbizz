@@ -20,6 +20,8 @@ dev/build
 🛠 **Configure the CMS**  
 Once the database is built, you will see a button labeled "Microbizz Applications" in the CMS. Start by creating a Microbizz Application in the CMS by entering a public and secret key. Contact [Ventu](https://micropedia.microbizz.com/tec/making-a-microbizz-app) commercial support to obtain these keys.
 
+![Fields for public and secret developer key](docs/images/doc-image-1.jpg)
+
 ### Activate Application
 
 🔗 **Establish Connection**  
