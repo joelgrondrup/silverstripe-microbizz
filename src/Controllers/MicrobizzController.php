@@ -135,6 +135,8 @@ namespace {
 
             if (!empty($microbizzInterface->Handle)){
 
+                error_log("Calling Microbizz handle");
+
                 $handleArray = explode('::', $microbizzInterface->Handle);
                 $class = $handleArray[0];
                 $function = $handleArray[1];
@@ -153,17 +155,15 @@ namespace {
                         "accesstoken" => $microbizzApplication->AccessToken
                     ];
 
-                    $class::$function($_GET, $params);
-                    //error_log("MicrobizzWebhoook handle fired with class: " . $class . " and static method: " . $function);
+                    return $class::$function($_GET, $params);
 
                 }
 
             }
             else{
-                error_log('MicrobizzWebhook reached, but no handle was fired');
+                error_log('MicrobizzInterface reached ...');
+                return "MicrobizzInterface reached ...";
             }
-
-            return "Hello world";
 
         }
 

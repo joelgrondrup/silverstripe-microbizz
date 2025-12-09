@@ -1,6 +1,6 @@
 ## Overview
 
-This module provides an interface to listen to one or more [Microbizz systems](https://microbizz.com/en), catch [complex objects](https://micropedia.microbizz.com/tec/complex-types) when commands are fired and act upon them.
+This module provides an interface to listen to one or more [Microbizz systems](https://microbizz.com/en), catch [complex objects](https://micropedia.microbizz.com/tec/complex-types) when commands are fired and act upon them. You can also create your own interface endpoints to create iframes in the Microbizz CRM-system.
 
 ## Installation
 
@@ -67,11 +67,15 @@ The data is the GET parameters from the iframe and params is an array with the p
 ```php
 <?php
 
-class TodoTabInterface extends BaseInterface {
+use SilverStripe\Control\Controller;
 
-    static function showMyCustomTabInterface($data, $params) {
+class TodoInterface extends BaseInterface {
 
-        return $this->renderWith("MyCustomTabInterface");
+    static function showMyCustomTodoTab($data, $params) {
+
+        $controller = Controller::curr();
+
+        return $controller->renderWith("MyCustomTodoTabInterface");
 
     }
 
