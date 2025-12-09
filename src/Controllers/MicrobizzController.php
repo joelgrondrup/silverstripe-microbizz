@@ -107,11 +107,9 @@ namespace {
 
             error_log('Microbizz interface fired with ID: ' . $id . " and OtherID: " . $otherId);
             error_log("Sessiontoken: " . $sessionToken);
-            error_log("Acccesstoken: " , $accessToken);
+            error_log("Acccesstoken: " . $accessToken);
 
             //Let's setup the security here
-
-            
 
             $microbizzApplication = \MicrobizzApplication::get_by_id($id);
 
@@ -127,7 +125,7 @@ namespace {
                 return $this->httpError(200);
             }
 
-
+            return "Hello world";
 
         }
 

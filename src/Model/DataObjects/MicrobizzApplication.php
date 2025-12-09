@@ -67,7 +67,7 @@ namespace {
                     TextField::create('SecretKey', 'Secret Key'),
                     LiteralField::create("AccessInformation", "<h2>Access information</h2>"),
                     TextField::create('AccessToken','Access token')->setReadonly(true),
-                    TextField::create('EndPoint', 'EndPoint', 'https://system.microbizz.dk/api/endpoint.php'),
+                    TextField::create('EndPoint', 'EndPoint')->setReadonly(true),
                     LiteralField::create("Api", "<h2>API information</h2>"),
                     TextField::create('Contract','Contract','1234'),
                     TextField::create('UserName','Username','youremail@email.com'),
