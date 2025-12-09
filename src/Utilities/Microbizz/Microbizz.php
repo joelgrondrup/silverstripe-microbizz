@@ -6,7 +6,7 @@ namespace {
 
     class Microbizz  {
 
-        private $endpoint = "https://system.microbizz.dk/api/endpoint.php";
+        private $endpoint;
 
         private $contract;
 
@@ -60,6 +60,17 @@ namespace {
             $response = $this->makeRequest($command);
 
             return $response;
+
+        }
+
+        public function validateSessionToken($token){
+
+            $query = [
+                "command" => "ValidateSessionToken",
+                "sessiontoken" => $token
+            ];
+
+            return $this->query($query);
 
         }
 

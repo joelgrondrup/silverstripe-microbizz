@@ -65,12 +65,13 @@ namespace {
                     LiteralField::create("Developer", "<h2>Developer information</h2>"),
                     TextField::create('PublicKey', 'Public Key'),
                     TextField::create('SecretKey', 'Secret Key'),
-                    LiteralField::create("AccessInformation", "<h2>Access information</h2>"),
+                    LiteralField::create("ApiInformation", "<h2>API information</h2>"),
                     TextField::create('AccessToken','Access token')->setReadonly(true),
                     TextField::create('EndPoint', 'EndPoint')->setReadonly(true),
-                    LiteralField::create("Api", "<h2>API information</h2>"),
-                    TextField::create('Contract','Contract','1234'),
+                    TextField::create('Contract','Contract')->setReadonly(true),
+                    LiteralField::create("UserInformation", "<h2>User information for api requests</h2>"),
                     TextField::create('UserName','Username','youremail@email.com'),
+                    TextField::create('APIKey', 'API key', 'your api key'),
                     PasswordField::create('Password','Password','your-password')   
                 ]
             );

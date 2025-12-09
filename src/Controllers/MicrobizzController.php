@@ -109,8 +109,6 @@ namespace {
             error_log("Sessiontoken: " . $sessionToken);
             error_log("Acccesstoken: " . $accessToken);
 
-            //Let's setup the security here
-
             $microbizzApplication = \MicrobizzApplication::get_by_id($id);
 
             if (!$microbizzApplication) {
@@ -118,6 +116,16 @@ namespace {
                 return $this->httpError(200);
             }
 
+            //Let's setup the security here
+            $microbizz = new Microbizz($microbizzApplication->Contract, $microbizzApplication->APIKey, $microbizzApplication->UserName, $microbizzApplication->Password);
+            $result = $microbizz->validateSessionToken($sessionToken);
+
+            if ($result->body->result != 1){
+                error_log('Sessiontoken not validated... ' . $sessionToken);
+                error_log(json_encode($result));
+                return $this->httpError(200);
+            }
+            
             $microbizzInterface = \MicrobizzInterface::get_by_id($otherId);
 
             if (!$microbizzInterface) {
