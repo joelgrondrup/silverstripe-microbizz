@@ -100,17 +100,19 @@ namespace {
             
             $id = isset($params['ID']) ? $params['ID'] : false;
             $otherId = isset($params['OtherID']) ? $params['OtherID'] : false;
+            $sessionToken = isset($_GET['sessiontoken']) ? $_GET['sessiontoken'] : false;
+            $accessToken = isset($_GET['accesstoken']) ? $_GET['accesstoken'] : false;
+
+            //$url = "http" . (($_SERVER['SERVER_PORT'] == 443) ? "s" : "") . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
             error_log('Microbizz interface fired with ID: ' . $id . " and OtherID: " . $otherId);
+            error_log("Sessiontoken: " . $sessionToken);
+            error_log("Acccesstoken: " , $accessToken);
 
-            print_r("HELLO WORLD");
-            print_r(json_encode($params));
+            //Let's setup the security here
 
-            $url = "http" . (($_SERVER['SERVER_PORT'] == 443) ? "s" : "") . "://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+            
 
-            print_r($url);
-
-            /*
             $microbizzApplication = \MicrobizzApplication::get_by_id($id);
 
             if (!$microbizzApplication) {
@@ -118,63 +120,14 @@ namespace {
                 return $this->httpError(200);
             }
 
-            $microbizzHook = \MicrobizzHook::get_by_id($otherId);
+            $microbizzInterface = \MicrobizzInterface::get_by_id($otherId);
 
-            if (!$microbizzHook) {
-                error_log('Microbizz hook not found');
+            if (!$microbizzInterface) {
+                error_log('Microbizz interface not found');
                 return $this->httpError(200);
             }
 
-            $microbizzEvent = MicrobizzEvent::create();
-            $microbizzEvent->ModCode = $microbizzHook->ModCode;
-            $microbizzEvent->Hook = $microbizzHook->Hook;
-            $microbizzEvent->MicrobizzApplication = $microbizzApplication->Title;
-            $microbizzEvent->Contract = $microbizzApplication->Contract;
-            $microbizzEvent->MicrobizzApplicationID = $microbizzApplication->ID;
-            $microbizzEvent->MicrobizzHookID = $microbizzHook->ID;
-            $microbizzEvent->POST = json_encode($_POST);
 
-            $object = isset($_POST["object"]) ? $_POST["object"] : false;
-
-            if ($object){
-
-                $todo = json_decode($object);
-                
-                if (isset($todo->id))
-                    $microbizzEvent->Todo = $todo->id;
-
-            }
-
-            $microbizzEvent->write();
-
-            if (!empty($microbizzHook->Handle)){
-
-                $handleArray = explode('::', $microbizzHook->Handle);
-                $class = $handleArray[0];
-                $function = $handleArray[1];
-
-                if (class_exists($class) && method_exists($class, $function)){
-
-                    $params = [
-                        "application" => $microbizzApplication,
-                        "event" => $microbizzEvent,
-                        "hook" => $microbizzHook,
-                        "contract" => $microbizzApplication->Contract,
-                        "apikey" => $microbizzApplication->AccessToken,
-                        "username" => $microbizzApplication->UserName,
-                        "password" => $microbizzApplication->Password
-                    ];
-
-                    $class::$function($_POST, $params, $microbizzEvent);
-                    //error_log("MicrobizzWebhoook handle fired with class: " . $class . " and static method: " . $function);
-
-                }
-
-            }
-            else{
-                error_log('MicrobizzWebhook reached, but no handle was fired');
-            }
-            */
 
         }
 

@@ -33,6 +33,7 @@ namespace {
             'SecretKey' => 'Text',
             'EndPoint' => 'Text',
             'Contract' => 'Text',
+            'APIKey' => 'Text',
             'AccessToken' => 'Text',
             'UserName' => 'Text',
             'Password' => 'Varchar(255)'
@@ -64,11 +65,11 @@ namespace {
                     LiteralField::create("Developer", "<h2>Developer information</h2>"),
                     TextField::create('PublicKey', 'Public Key'),
                     TextField::create('SecretKey', 'Secret Key'),
-                    LiteralField::create("Api", "<h2>API information</h2>"),
+                    LiteralField::create("AccessInformation", "<h2>Access information</h2>"),
+                    TextField::create('AccessToken','Access token')->setReadonly(true),
                     TextField::create('EndPoint', 'EndPoint', 'https://system.microbizz.dk/api/endpoint.php'),
+                    LiteralField::create("Api", "<h2>API information</h2>"),
                     TextField::create('Contract','Contract','1234'),
-                    TextField::create('AccessToken','API key','1234-1234-1234-1234-1234-1234-1234'),
-                    LiteralField::create("Api", "<h2>User information</h2>"),
                     TextField::create('UserName','Username','youremail@email.com'),
                     PasswordField::create('Password','Password','your-password')   
                 ]
@@ -94,22 +95,16 @@ namespace {
         {
             $actions = parent::getCMSActions();
 
-            $activateWebhooksLink = new CustomLink('activateWebhooks','Activate webhooks');
-            $activateWebhooksLink->setButtonIcon(SilverStripeIcons::ICON_EXPORT);
-            $activateWebhooksLink->setNewWindow(true);
+            $activateHooksAndInterfacesLink = new CustomLink('activateWebhooksAndInterfaces','Activate hooks and interfaces');
+            $activateHooksAndInterfacesLink->setButtonIcon(SilverStripeIcons::ICON_EXPORT);
+            $activateHooksAndInterfacesLink->setNewWindow(false);
 
-            $actions->push($activateWebhooksLink);
-
-            $activateInterfacesLink = new CustomLink('activateInterfaces','Activate interfaces');
-            $activateInterfacesLink->setButtonIcon(SilverStripeIcons::ICON_SLIDERS);
-            $activateInterfacesLink->setNewWindow(true);
-
-            $actions->push($activateInterfacesLink);
+            $actions->push($activateHooksAndInterfacesLink);
 
             return $actions;
         }
 
-        public function activateWebhooks($request) {
+        public function activateWebhooksAndInterfaces($request) {
 
             if (isset($_SERVER['HTTPS']) &&
                 ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) ||
@@ -140,39 +135,6 @@ namespace {
                 array_push($Hooks, $Hook);
             }
 
-            $RequestData = [
-                'publicid' => $PublicKey,
-                'negotiateurl' => $NegotiateURL,
-                'returnurl' => $ReturnURL,
-                'hooks' => $Hooks
-            ];
-
-            $RedirectUrl = $MicrobizzLink . '?request=' . json_encode($RequestData);
-
-            header('Location: ' . $RedirectUrl);
-            exit;
-
-        }
-
-        public function activateInterfaces($request) {
-
-            if (isset($_SERVER['HTTPS']) &&
-                ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) ||
-                isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
-                $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
-                $Protocol = 'https://';
-            }
-            else {
-                $Protocol = 'http://';
-            }
-
-            $MicrobizzLink = 'https://system.microbizz.dk/appconnect/';
-            $PublicKey = $this->PublicKey;
-            $NegotiateURL = $Protocol . $_SERVER['SERVER_NAME'] . "/microbizz/negotiate/" . $this->ID;
-            $ReturnURL = $Protocol . $_SERVER['SERVER_NAME'] . "/microbizz/returnurl/" . $this->ID;
-
-            $Hooks = [];
-
             foreach ($this->MicrobizzInterfaces() as $MicrobizzInterface) {
 
                 $Hook = [
@@ -192,12 +154,7 @@ namespace {
                 'hooks' => $Hooks
             ];
 
-            error_log("Creating interfaces");
-            error_log(json_encode($RequestData));
-
             $RedirectUrl = $MicrobizzLink . '?request=' . json_encode($RequestData);
-
-            error_log("Redirect url: " . $RedirectUrl);
 
             header('Location: ' . $RedirectUrl);
             exit;
