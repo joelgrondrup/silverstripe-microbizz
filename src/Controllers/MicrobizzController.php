@@ -122,10 +122,14 @@ namespace {
             $microbizz = new Microbizz($microbizzApplication->EndPoint, $microbizzApplication->Contract, $microbizzApplication->APIKey, $microbizzApplication->UserName, $microbizzApplication->Password, $microbizzApplication->AccessToken);
             $result = $microbizz->validateSessionToken($sessionToken);
 
-            if ($result->body->result != 1){
+            if ($result->body->status != 1){
                 error_log('Sessiontoken not validated... ' . $sessionToken);
                 error_log(json_encode($result));
                 return $this->httpError(200);
+            }
+            else {
+                error_log('Sessiontoken validated... ' . $sessionToken);
+                error_log(json_encode($result));
             }
             
             $microbizzInterface = \MicrobizzInterface::get_by_id($otherId);
