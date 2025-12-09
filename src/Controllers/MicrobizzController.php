@@ -119,7 +119,7 @@ namespace {
             }
 
             //Let's setup the security here
-            $microbizz = new Microbizz($microbizzApplication->Endpoint, $microbizzApplication->Contract, $microbizzApplication->APIKey, $microbizzApplication->UserName, $microbizzApplication->Password, $microbizzApplication->AccessToken);
+            $microbizz = new Microbizz($microbizzApplication->EndPoint, $microbizzApplication->Contract, $microbizzApplication->APIKey, $microbizzApplication->UserName, $microbizzApplication->Password, $microbizzApplication->AccessToken);
             $result = $microbizz->validateSessionToken($sessionToken);
 
             if ($result->body->result != 1){
