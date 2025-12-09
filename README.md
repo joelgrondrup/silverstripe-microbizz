@@ -20,7 +20,7 @@ dev/build
 🛠 **Configure the CMS**  
 Once the database is built, you will see a button labeled "Microbizz Applications" in the CMS. Start by creating a Microbizz Application in the CMS by entering a public and secret key. Contact [Ventu](https://micropedia.microbizz.com/tec/making-a-microbizz-app) commercial support to obtain these keys.
 
-![Fields for public and secret developer key](docs/images/doc-image-1.jpg)
+![Image of fields for public and secret developer key](docs/images/doc-image-1.jpg)
 
 ### Activate Application
 
@@ -38,6 +38,8 @@ Complete the configuration by providing an API key, username, and password, whic
 
 🔔 **Receive Events**  
 To capture your first event objects from Microbizz, create a webhook and provide a mod and a hook code. Remember, hooks are necessary for obtaining event endpoint types.
+
+![Image of fields for webhook with title, mod and hook code](docs/images/doc-image-2.png)
 
 You can add as many hooks as needed. Available events are listed [here](https://micropedia.microbizz.com/tec/making-a-microbizz-app#MakingaMicrobizzapp-Programmingendpoints). After adding event hooks, activate them by clicking "Activate" and follow the form in Microbizz.
 
@@ -66,6 +68,8 @@ class TodoWebhooks extends BaseWebhook {
 
 }
 ```
+
+![Field for customs webhook functions](docs/images/doc-image-3.png)
 
 Every extension of the BaseWebhook should accept three parameters: data, params, and event. Data represents the information sent from Microbizz, params is an array of parameters from the Microbizz application, and event is the MicrobizzEvent object in SilverStripe. Modify the log in the CMS using this, which is particularly useful for debugging and detailing what transpired.
 
