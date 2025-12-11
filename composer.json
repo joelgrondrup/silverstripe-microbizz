@@ -3,7 +3,7 @@
   "description": "Adds support for event handling for Microbizz in a SilverStripe environment",
   "type": "silverstripe-vendormodule",
   "homepage": "https://github.com/joelgrondrup/silverstripe-microbizz",
-  "keywords": ["silverstripe", "microbizz"],
+  "keywords": ["silverstripe", "microbizz", "ventu"],
   "license": "BSD-3-Clause",
   "authors": [
     {
