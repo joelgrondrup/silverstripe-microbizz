@@ -119,7 +119,7 @@ namespace {
                 $microbizzApplication->APIKey, 
                 $microbizzApplication->UserName, 
                 $microbizzApplication->Password, 
-                $accessToken);
+                $microbizzApplication->AccessToken);
             
             error_log('Validating sessiontoken... ' . $sessionToken);
 
@@ -133,6 +133,7 @@ namespace {
             else {
                 error_log('Sessiontoken validated... ' . $sessionToken);
                 error_log(json_encode($result));
+                
             }
             
             $microbizzInterface = \MicrobizzInterface::get_by_id($otherId);
