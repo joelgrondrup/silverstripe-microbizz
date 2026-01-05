@@ -113,7 +113,10 @@ namespace {
             }
 
             //Let's setup the security here
-            $microbizz = new Microbizz($microbizzApplication->EndPoint, $microbizzApplication->Contract, $microbizzApplication->APIKey, $microbizzApplication->UserName, $microbizzApplication->Password, $microbizzApplication->AccessToken);
+            $microbizz = new Microbizz($microbizzApplication->EndPoint, $microbizzApplication->Contract, $microbizzApplication->APIKey, $microbizzApplication->UserName, $microbizzApplication->Password, $accessToken);
+            
+            error_log('Validating sessiontoken... ' . $sessionToken);
+
             $result = $microbizz->validateSessionToken($sessionToken);
 
             if ($result->body->status != 1){
@@ -143,7 +146,7 @@ namespace {
 
                     $params = [
                         "application" => $microbizzApplication,
-                        "sessiontokenresult" => $result,
+                        "sessiontokenresult" => $result->body,
                         "interface" => $microbizzInterface,
                         "endpoint" => $microbizzApplication->EndPoint,
                         "contract" => $microbizzApplication->Contract,
