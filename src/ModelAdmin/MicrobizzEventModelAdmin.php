@@ -5,7 +5,7 @@ namespace JoelGrondrup\Microbizz;
 use SilverStripe\Admin\ModelAdmin;
 use Colymba\BulkManager\BulkManager;
 
-class MicrobizzEventsModelAdmin extends ModelAdmin 
+class MicrobizzEventModelAdmin extends ModelAdmin 
 {
 
     private static $managed_models = [

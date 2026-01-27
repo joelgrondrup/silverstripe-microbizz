@@ -27,6 +27,8 @@ class MicrobizzApplicationModelAdmin extends ModelAdmin
 
 class MicrobizzApplication extends DataObject {
     
+    private static $table_name = "MicrobizzApplication";
+    
     private static $db = array (
         'Title' => 'Varchar(255)',
         'PublicKey' => 'Text',
