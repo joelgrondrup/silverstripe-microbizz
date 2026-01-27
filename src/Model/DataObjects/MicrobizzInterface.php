@@ -2,6 +2,8 @@
 
 namespace JoelGrondrup\Microbizz;
 
+use ReflectionClass;
+use ReflectionMethod;
 use SilverStripe\Forms\DropdownField;
 use SilverStripe\ORM\ArrayList;
 use SilverStripe\ORM\DataObject;

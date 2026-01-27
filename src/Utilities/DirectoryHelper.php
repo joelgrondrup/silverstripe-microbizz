@@ -2,6 +2,10 @@
 
 namespace JoelGrondrup\Microbizz;
 
+use Exception;
+use RecursiveIteratorIterator;
+use RecursiveDirectoryIterator;
+
 class DirectoryHelper {
     public static function searchClassesInFiles($directory) {
         
