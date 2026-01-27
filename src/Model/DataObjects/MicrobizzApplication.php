@@ -43,8 +43,8 @@ class MicrobizzApplication extends DataObject {
     );
 
     private static $has_many = array (
-        'MicrobizzHooks' => 'MicrobizzHook',
-        'MicrobizzInterfaces' => 'MicrobizzInterface'
+        'MicrobizzHooks' => MicrobizzHook::class,
+        'MicrobizzInterfaces' => MicrobizzInterface::class
     );
     
     private static $summary_fields = array(
