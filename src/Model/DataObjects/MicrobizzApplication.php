@@ -4,6 +4,7 @@ namespace JoelGrondrup\Microbizz;
 
 use LeKoala\CmsActions\CustomLink;
 use LeKoala\CmsActions\SilverStripeIcons;
+use MicrobizzHelper;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\PasswordField;
 use SilverStripe\ORM\DataObject;
@@ -109,6 +110,7 @@ class MicrobizzApplication extends DataObject {
 
     public function activateApplication($request) {
 
+        /*
         if (isset($_SERVER['HTTPS']) &&
             ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) ||
             isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
@@ -158,6 +160,9 @@ class MicrobizzApplication extends DataObject {
         ];
 
         $RedirectUrl = $MicrobizzLink . '?request=' . json_encode($RequestData);
+        */
+
+        $RedirectUrl = MicrobizzHelper::generateActivationUrl($this);
 
         header('Location: ' . $RedirectUrl);
         exit;
