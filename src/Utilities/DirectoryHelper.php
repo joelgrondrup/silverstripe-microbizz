@@ -1,5 +1,7 @@
 <?php
 
+namespace JoelGrondrup\Microbizz;
+
 class DirectoryHelper {
     public static function searchClassesInFiles($directory) {
         

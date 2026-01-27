@@ -1,5 +1,7 @@
 <?php
 
+namespace JoelGrondrup\Microbizz;
+
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\Forms\TextareaField;

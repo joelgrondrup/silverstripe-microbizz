@@ -1,5 +1,7 @@
 <?php
 
+namespace JoelGrondrup\Microbizz;
+
 use SilverStripe\Admin\ModelAdmin;
 use Colymba\BulkManager\BulkManager;
 

@@ -1,167 +1,167 @@
 <?php
 
-namespace {
+namespace JoelGrondrup\Microbizz;
+
+use LeKoala\CmsActions\CustomLink;
+use LeKoala\CmsActions\SilverStripeIcons;
+use SilverStripe\Forms\LiteralField;
+use SilverStripe\Forms\PasswordField;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\Admin\ModelAdmin;
+use SilverStripe\Forms\GridField\GridField;
+use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
+use SilverStripe\Forms\TextField;
+
+class MicrobizzApplicationModelAdmin extends ModelAdmin 
+{
+
+    private static $managed_models = [
+        'MicrobizzApplication'
+    ];
+
+    private static $url_segment = 'microbizzapplications';
+
+    private static $menu_title = 'Microbizz applications';
     
-    use LeKoala\CmsActions\CustomLink;
-    use LeKoala\CmsActions\SilverStripeIcons;
-    use SilverStripe\Forms\LiteralField;
-    use SilverStripe\Forms\PasswordField;
-    use SilverStripe\ORM\DataObject;
-    use SilverStripe\Admin\ModelAdmin;
-    use SilverStripe\Forms\GridField\GridField;
-    use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
-    use SilverStripe\Forms\TextField;
+}
 
-    class MicrobizzApplicationModelAdmin extends ModelAdmin 
-    {
+class MicrobizzApplication extends DataObject {
+    
+    private static $db = array (
+        'Title' => 'Varchar(255)',
+        'PublicKey' => 'Text',
+        'SecretKey' => 'Text',
+        'EndPoint' => 'Text',
+        'Contract' => 'Text',
+        'APIKey' => 'Text',
+        'AccessToken' => 'Text',
+        'UserName' => 'Text',
+        'Password' => 'Varchar(255)'
+    );
 
-        private static $managed_models = [
-            'MicrobizzApplication'
-        ];
+    private static $has_many = array (
+        'MicrobizzHooks' => 'MicrobizzHook',
+        'MicrobizzInterfaces' => 'MicrobizzInterface'
+    );
+    
+    private static $summary_fields = array(
+        'Title' => 'Title'
+    );
+    
+    private static $default_sort = "Title ASC";
+    
+    function getCMSFields() {
+        
+        $fields = parent::getCMSFields();
 
-        private static $url_segment = 'microbizzapplications';
+        $fields->removeByName("Main");
+        $fields->removeByName("MicrobizzHooks");
+        $fields->removeByName("MicrobizzInterfaces");
 
-        private static $menu_title = 'Microbizz applications';
+        $fields->addFieldsToTab(
+            'Root.Config',
+            [
+                TextField::create('Title', 'Title'),
+                LiteralField::create("Developer", "<h2>Developer information</h2>"),
+                TextField::create('PublicKey', 'Public Key'),
+                TextField::create('SecretKey', 'Secret Key'),
+                LiteralField::create("ApiInformation", "<h2>API information</h2>"),
+                TextField::create('AccessToken','Access token')->setReadonly(true),
+                TextField::create('EndPoint', 'EndPoint')->setReadonly(true),
+                TextField::create('Contract','Contract')->setReadonly(true),
+                LiteralField::create("UserInformation", "<h2>User information for api requests</h2>"),
+                TextField::create('UserName','Username','youremail@email.com'),
+                TextField::create('APIKey', 'API key', 'your api key'),
+                TextField::create('Password','Password','your-password')   
+            ]
+        );
+
+        $config = GridFieldConfig_RecordEditor::create();
+
+        $fields->addFieldToTab(
+            'Root.Hooks',
+            GridField::create('MicrobizzHooks', 'Microbizz webhooks', $this->MicrobizzHooks(), $config)
+        );
+
+        $fields->addFieldToTab(
+            'Root.Interfaces',
+            GridField::create('MicrobizzInterfaces', 'Microbizz interfaces', $this->MicrobizzInterfaces(), $config)
+        );
+
+        return $fields;
         
     }
 
-    class MicrobizzApplication extends DataObject {
-        
-        private static $db = array (
-            'Title' => 'Varchar(255)',
-            'PublicKey' => 'Text',
-            'SecretKey' => 'Text',
-            'EndPoint' => 'Text',
-            'Contract' => 'Text',
-            'APIKey' => 'Text',
-            'AccessToken' => 'Text',
-            'UserName' => 'Text',
-            'Password' => 'Varchar(255)'
-        );
+    public function getCMSActions()
+    {
+        $actions = parent::getCMSActions();
 
-        private static $has_many = array (
-            'MicrobizzHooks' => 'MicrobizzHook',
-            'MicrobizzInterfaces' => 'MicrobizzInterface'
-        );
-        
-        private static $summary_fields = array(
-            'Title' => 'Title'
-        );
-        
-        private static $default_sort = "Title ASC";
-        
-        function getCMSFields() {
-            
-            $fields = parent::getCMSFields();
+        $activateHooksAndInterfacesLink = new CustomLink('activateApplication','Activate');
+        $activateHooksAndInterfacesLink->setButtonIcon(SilverStripeIcons::ICON_EXPORT);
+        $activateHooksAndInterfacesLink->setNewWindow(false);
 
-            $fields->removeByName("Main");
-            $fields->removeByName("MicrobizzHooks");
-            $fields->removeByName("MicrobizzInterfaces");
+        $actions->push($activateHooksAndInterfacesLink);
 
-            $fields->addFieldsToTab(
-                'Root.Config',
-                [
-                    TextField::create('Title', 'Title'),
-                    LiteralField::create("Developer", "<h2>Developer information</h2>"),
-                    TextField::create('PublicKey', 'Public Key'),
-                    TextField::create('SecretKey', 'Secret Key'),
-                    LiteralField::create("ApiInformation", "<h2>API information</h2>"),
-                    TextField::create('AccessToken','Access token')->setReadonly(true),
-                    TextField::create('EndPoint', 'EndPoint')->setReadonly(true),
-                    TextField::create('Contract','Contract')->setReadonly(true),
-                    LiteralField::create("UserInformation", "<h2>User information for api requests</h2>"),
-                    TextField::create('UserName','Username','youremail@email.com'),
-                    TextField::create('APIKey', 'API key', 'your api key'),
-                    TextField::create('Password','Password','your-password')   
-                ]
-            );
+        return $actions;
+    }
 
-            $config = GridFieldConfig_RecordEditor::create();
+    public function activateApplication($request) {
 
-            $fields->addFieldToTab(
-                'Root.Hooks',
-                GridField::create('MicrobizzHooks', 'Microbizz webhooks', $this->MicrobizzHooks(), $config)
-            );
-
-            $fields->addFieldToTab(
-                'Root.Interfaces',
-                GridField::create('MicrobizzInterfaces', 'Microbizz interfaces', $this->MicrobizzInterfaces(), $config)
-            );
-
-            return $fields;
-            
+        if (isset($_SERVER['HTTPS']) &&
+            ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) ||
+            isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
+            $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
+            $Protocol = 'https://';
+        }
+        else {
+            $Protocol = 'http://';
         }
 
-        public function getCMSActions()
-        {
-            $actions = parent::getCMSActions();
+        $MicrobizzLink = 'https://system.microbizz.dk/appconnect/';
+        $PublicKey = $this->PublicKey;
+        $NegotiateURL = $Protocol . $_SERVER['SERVER_NAME'] . "/microbizz/negotiate/" . $this->ID;
+        $ReturnURL = $Protocol . $_SERVER['SERVER_NAME'] . "/microbizz/returnurl/" . $this->ID;
 
-            $activateHooksAndInterfacesLink = new CustomLink('activateApplication','Activate');
-            $activateHooksAndInterfacesLink->setButtonIcon(SilverStripeIcons::ICON_EXPORT);
-            $activateHooksAndInterfacesLink->setNewWindow(false);
+        $Hooks = [];
 
-            $actions->push($activateHooksAndInterfacesLink);
+        foreach ($this->MicrobizzHooks() as $MicrobizzHook) {
 
-            return $actions;
-        }
-
-        public function activateApplication($request) {
-
-            if (isset($_SERVER['HTTPS']) &&
-                ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) ||
-                isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
-                $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
-                $Protocol = 'https://';
-            }
-            else {
-                $Protocol = 'http://';
-            }
-
-            $MicrobizzLink = 'https://system.microbizz.dk/appconnect/';
-            $PublicKey = $this->PublicKey;
-            $NegotiateURL = $Protocol . $_SERVER['SERVER_NAME'] . "/microbizz/negotiate/" . $this->ID;
-            $ReturnURL = $Protocol . $_SERVER['SERVER_NAME'] . "/microbizz/returnurl/" . $this->ID;
-
-            $Hooks = [];
-
-            foreach ($this->MicrobizzHooks() as $MicrobizzHook) {
-
-                $Hook = [
-                    'modcode' => $MicrobizzHook->ModCode,
-                    'hook' => $MicrobizzHook->Hook,
-                    'title' => $MicrobizzHook->Title,
-                    'url' => $Protocol . $_SERVER['SERVER_NAME'] . '/microbizz/webhook/' . $this->ID . '/' . $MicrobizzHook->ID
-                ];
-
-                array_push($Hooks, $Hook);
-            }
-
-            foreach ($this->MicrobizzInterfaces() as $MicrobizzInterface) {
-
-                $Hook = [
-                    'modcode' => $MicrobizzInterface->ModCode,
-                    'hook' => $MicrobizzInterface->Hook,
-                    'title' => $MicrobizzInterface->Title,
-                    'url' => $Protocol . $_SERVER['SERVER_NAME'] . '/microbizz/interface/' . $this->ID . '/' . $MicrobizzInterface->ID
-                ];
-
-                array_push($Hooks, $Hook);
-            }
-
-            $RequestData = [
-                'publicid' => $PublicKey,
-                'negotiateurl' => $NegotiateURL,
-                'returnurl' => $ReturnURL,
-                'hooks' => $Hooks
+            $Hook = [
+                'modcode' => $MicrobizzHook->ModCode,
+                'hook' => $MicrobizzHook->Hook,
+                'title' => $MicrobizzHook->Title,
+                'url' => $Protocol . $_SERVER['SERVER_NAME'] . '/microbizz/webhook/' . $this->ID . '/' . $MicrobizzHook->ID
             ];
 
-            $RedirectUrl = $MicrobizzLink . '?request=' . json_encode($RequestData);
-
-            header('Location: ' . $RedirectUrl);
-            exit;
-
+            array_push($Hooks, $Hook);
         }
-        
-    }
 
+        foreach ($this->MicrobizzInterfaces() as $MicrobizzInterface) {
+
+            $Hook = [
+                'modcode' => $MicrobizzInterface->ModCode,
+                'hook' => $MicrobizzInterface->Hook,
+                'title' => $MicrobizzInterface->Title,
+                'url' => $Protocol . $_SERVER['SERVER_NAME'] . '/microbizz/interface/' . $this->ID . '/' . $MicrobizzInterface->ID
+            ];
+
+            array_push($Hooks, $Hook);
+        }
+
+        $RequestData = [
+            'publicid' => $PublicKey,
+            'negotiateurl' => $NegotiateURL,
+            'returnurl' => $ReturnURL,
+            'hooks' => $Hooks
+        ];
+
+        $RedirectUrl = $MicrobizzLink . '?request=' . json_encode($RequestData);
+
+        header('Location: ' . $RedirectUrl);
+        exit;
+
+    }
+    
 }
+
+

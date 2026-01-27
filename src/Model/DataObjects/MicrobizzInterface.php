@@ -1,79 +1,77 @@
 <?php
 
-namespace {
+namespace JoelGrondrup\Microbizz;
 
-    use SilverStripe\Forms\DropdownField;
-    use SilverStripe\ORM\ArrayList;
-    use SilverStripe\ORM\DataObject;
-    use SilverStripe\View\ArrayData;
+use SilverStripe\Forms\DropdownField;
+use SilverStripe\ORM\ArrayList;
+use SilverStripe\ORM\DataObject;
+use SilverStripe\View\ArrayData;
 
-    class MicrobizzInterface extends DataObject {
+class MicrobizzInterface extends DataObject {
+    
+    private static $db = array (
+        'Title' => 'Varchar(255)',
+        'ModCode' => 'Varchar(255)',
+        'Hook' => 'Varchar(255)',
+        'Handle' => 'Text'
+    );
+
+    private static $has_one = [
+        'MicrobizzApplication' => MicrobizzApplication::class
+    ];
+
+    private static $has_many = [
         
-        private static $db = array (
-            'Title' => 'Varchar(255)',
-            'ModCode' => 'Varchar(255)',
-            'Hook' => 'Varchar(255)',
-            'Handle' => 'Text'
-        );
+    ];
+    
+    private static $summary_fields = array(
+        'Title' => 'Title',
+        'ModCode' => 'ModCode',
+        'Hook' => 'Hook'
+    );
+    
+    private static $default_sort = "Title ASC";
+    
+    function getCMSFields() {
 
-        private static $has_one = [
-            'MicrobizzApplication' => MicrobizzApplication::class
-        ];
+        $fields = parent::getCMSFields();
 
-        private static $has_many = [
+        $fields->removeByName("MicrobizzApplicationID");
+
+        $actionsList = ArrayList::create();
+
+        $action = ArrayData::create();
+        $action->ID = "";
+        $action->Title = "Choose an action";
+        $actionsList->add($action);
+        
+        $directoryToSearch = $_SERVER["DOCUMENT_ROOT"] . "/../app/src/";  
+        $classes = DirectoryHelper::searchClassesInFiles($directoryToSearch);
+        
+        foreach ($classes as $classInfo) {
             
-        ];
-        
-        private static $summary_fields = array(
-            'Title' => 'Title',
-            'ModCode' => 'ModCode',
-            'Hook' => 'Hook'
-        );
-        
-        private static $default_sort = "Title ASC";
-        
-        function getCMSFields() {
-
-            $fields = parent::getCMSFields();
-
-            $fields->removeByName("MicrobizzApplicationID");
-
-            $actionsList = ArrayList::create();
-
-            $action = ArrayData::create();
-            $action->ID = "";
-            $action->Title = "Choose an action";
-            $actionsList->add($action);
-            
-            $directoryToSearch = $_SERVER["DOCUMENT_ROOT"] . "/../app/src/";  
-            $classes = DirectoryHelper::searchClassesInFiles($directoryToSearch);
-            
-            foreach ($classes as $classInfo) {
+            //echo "Class '{$classInfo['class']}' found in {$classInfo['file']}\n";
+            if (is_subclass_of($classInfo['class'], "BaseInterface")) {
                 
-                //echo "Class '{$classInfo['class']}' found in {$classInfo['file']}\n";
-                if (is_subclass_of($classInfo['class'], "BaseInterface")) {
+                $reflectionClass = new ReflectionClass($classInfo['class']);
+                $methods = $reflectionClass->getMethods(ReflectionMethod::IS_STATIC);
+                
+                foreach ($methods as $method) {
                     
-                    $reflectionClass = new ReflectionClass($classInfo['class']);
-                    $methods = $reflectionClass->getMethods(ReflectionMethod::IS_STATIC);
-                    
-                    foreach ($methods as $method) {
-                        
-                        $action = ArrayData::create();
-                        $action->ID = $classInfo['class'] . "::" . $method->getName();
-                        $action->Title = $classInfo['class'] . "::" . $method->getName();
-                        $actionsList->add($action);
-
-                    }
+                    $action = ArrayData::create();
+                    $action->ID = $classInfo['class'] . "::" . $method->getName();
+                    $action->Title = $classInfo['class'] . "::" . $method->getName();
+                    $actionsList->add($action);
 
                 }
-            }
-                    
-            $fields->addFieldToTab("Root.Action", DropdownField::create("Handle", "Choose action", $actionsList->map()));
 
-            return $fields;
-            
+            }
         }
+                
+        $fields->addFieldToTab("Root.Action", DropdownField::create("Handle", "Choose action", $actionsList->map()));
+
+        return $fields;
         
     }
-
+    
 }

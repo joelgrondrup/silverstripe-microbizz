@@ -1,250 +1,250 @@
 <?php
 
-namespace {
+namespace JoelGrondrup\Microbizz;
 
-    use SilverStripe\CMS\Controllers\ContentController;
+use SilverStripe\CMS\Controllers\ContentController;
 
-    class MicrobizzController extends ContentController
+class MicrobizzController extends ContentController
+{
+    private static $allowed_actions = [
+        'negotiate',
+        'returnurl',
+        'webhook',
+        'interface'
+    ];
+
+    protected function init()
     {
-        private static $allowed_actions = [
-            'negotiate',
-            'returnurl',
-            'webhook',
-            'interface'
-        ];
-
-        protected function init()
-        {
-            parent::init();
-            
-        }
-
-        public function webhook(){
-
-            $params = $this->getRequest()->params();
-            
-            $id = isset($params['ID']) ? $params['ID'] : false;
-            $otherId = isset($params['OtherID']) ? $params['OtherID'] : false;
-
-            //error_log('Microbizz hook fired with ID: ' . $id . " and OtherID: " . $otherId);
-
-            $microbizzApplication = \MicrobizzApplication::get_by_id($id);
-
-            if (!$microbizzApplication) {
-                error_log('Microbizz application not found');
-                return $this->httpError(200);
-            }
-
-            $microbizzHook = \MicrobizzHook::get_by_id($otherId);
-
-            if (!$microbizzHook) {
-                error_log('Microbizz hook not found');
-                return $this->httpError(200);
-            }
-
-            $microbizzEvent = MicrobizzEvent::create();
-            $microbizzEvent->ModCode = $microbizzHook->ModCode;
-            $microbizzEvent->Hook = $microbizzHook->Hook;
-            $microbizzEvent->MicrobizzApplication = $microbizzApplication->Title;
-            $microbizzEvent->Contract = $microbizzApplication->Contract;
-            $microbizzEvent->MicrobizzApplicationID = $microbizzApplication->ID;
-            $microbizzEvent->MicrobizzHookID = $microbizzHook->ID;
-            $microbizzEvent->POST = json_encode($_POST);
-
-            $object = isset($_POST["object"]) ? $_POST["object"] : false;
-
-            if ($object){
-
-                $todo = json_decode($object);
-                
-                if (isset($todo->id))
-                    $microbizzEvent->Todo = $todo->id;
-
-            }
-
-            $microbizzEvent->write();
-
-            if (!empty($microbizzHook->Handle)){
-
-                $handleArray = explode('::', $microbizzHook->Handle);
-                $class = $handleArray[0];
-                $function = $handleArray[1];
-
-                if (class_exists($class) && method_exists($class, $function)){
-
-                    $params = [
-                        "application" => $microbizzApplication,
-                        "event" => $microbizzEvent,
-                        "hook" => $microbizzHook,
-                        "endpoint" => $microbizzApplication->EndPoint,
-                        "contract" => $microbizzApplication->Contract,
-                        "apikey" => $microbizzApplication->AccessToken,
-                        "username" => $microbizzApplication->UserName,
-                        "password" => $microbizzApplication->Password,
-                        "accesstoken" => $microbizzApplication->AccessToken
-                    ];
-
-                    $class::$function($_POST, $params, $microbizzEvent);
-                    //error_log("MicrobizzWebhoook handle fired with class: " . $class . " and static method: " . $function);
-
-                }
-
-            }
-            else{
-                error_log('MicrobizzWebhook reached, but no handle was fired');
-            }
-
-        }
-
-        public function interface(){
-
-            $params = $this->getRequest()->params();
-            
-            $id = isset($params['ID']) ? $params['ID'] : false;
-            $otherId = isset($params['OtherID']) ? $params['OtherID'] : false;
-            $sessionToken = isset($_GET['sessiontoken']) ? $_GET['sessiontoken'] : false;
-            $accessToken = isset($_GET['accesstoken']) ? $_GET['accesstoken'] : false;
-
-            $microbizzApplication = \MicrobizzApplication::get_by_id($id);
-
-            if (!$microbizzApplication) {
-                error_log('Microbizz application not found');
-                return $this->httpError(200);
-            }
-
-            //Let's setup the security here
-            $microbizz = new Microbizz(
-                $microbizzApplication->EndPoint, 
-                $microbizzApplication->Contract, 
-                $microbizzApplication->APIKey, 
-                $microbizzApplication->UserName, 
-                $microbizzApplication->Password, 
-                $microbizzApplication->AccessToken);
-            
-            error_log('Validating sessiontoken... ' . $sessionToken);
-
-            $result = $microbizz->validateSessionToken($sessionToken);
-
-            if ($result->body->status != 1){
-                error_log('Sessiontoken not validated... ' . $sessionToken);
-                error_log(json_encode($result));
-                return $this->httpError(200);
-            }
-            else {
-                error_log('Sessiontoken validated... ' . $sessionToken);
-                error_log(json_encode($result));
-                
-            }
-            
-            $microbizzInterface = \MicrobizzInterface::get_by_id($otherId);
-
-            if (!$microbizzInterface) {
-                error_log('Microbizz interface not found');
-                return $this->httpError(200);
-            }
-
-            if (!empty($microbizzInterface->Handle)){
-
-                $handleArray = explode('::', $microbizzInterface->Handle);
-                $class = $handleArray[0];
-                $function = $handleArray[1];
-
-                if (class_exists($class) && method_exists($class, $function)){
-
-                    $params = [
-                        "application" => $microbizzApplication,
-                        "sessiontokenresult" => $result->body,
-                        "interface" => $microbizzInterface,
-                        "endpoint" => $microbizzApplication->EndPoint,
-                        "contract" => $microbizzApplication->Contract,
-                        "apikey" => $microbizzApplication->AccessToken,
-                        "username" => $microbizzApplication->UserName,
-                        "password" => $microbizzApplication->Password,
-                        "accesstoken" => $microbizzApplication->AccessToken
-                    ];
-
-                    return $class::$function($_GET, $params);
-
-                }
-
-            }
-            else{
-                error_log('MicrobizzInterface reached ...');
-                return "MicrobizzInterface reached ...";
-            }
-
-        }
-
-        public function negotiate(){
-
-            $params = $this->getRequest()->params();
-            
-            $ID = isset($params['ID']) ? $params['ID'] : false;
-
-            if (!$ID) {
-                error_log('Id missing in negotiate URL');
-                return $this->httpError(404);
-            }
-
-            $MicrobizzApplication = \MicrobizzApplication::get_by_id($ID);
-
-            if (!$MicrobizzApplication) {
-                error_log('Microbizz application not found');
-                return $this->httpError(404);
-            }
-
-            error_log(json_encode($_POST));
-
-            $endpoint = isset($_POST["endpoint"]) ? $_POST["endpoint"] : false;
-            $contract = isset($_POST["contract"]) ? $_POST["contract"] : false;
-            $accesstoken = isset($_POST["accesstoken"]) ? $_POST["accesstoken"] : false;
-            $challenge = isset($_POST["challenge"]) ? $_POST["challenge"] : false;
-
-            error_log($endpoint);
-            error_log($contract);
-            error_log($accesstoken);
-            error_log($challenge);
-
-            if ($endpoint !== false && $contract !== false && $accesstoken !== false && $challenge !== false) {
-                
-                $MicrobizzApplication->EndPoint = $endpoint;
-                $MicrobizzApplication->Contract = $contract;
-                $MicrobizzApplication->AccessToken = $accesstoken;
-
-                $MicrobizzApplication->write();
-                error_log("Negotiate script succeded");
-                error_log($challenge . $MicrobizzApplication->SecretKey);
-                error_log(sha1($challenge . $MicrobizzApplication->SecretKey));
-
-                return sha1($challenge . $MicrobizzApplication->SecretKey);
-
-            } else {
-
-                error_log('Missing post params from Microbizz');
-                $this->Title = 'Missing post params from Microbizz';
-                return $this->httpError(404);
-
-            }
-
-        }
-
-        public function returnurl(){
-
-            $params = $this->getRequest()->params();
-            
-            $ID = isset($params['ID']) ? $params['ID'] : false;
-
-            if (!$ID) {
-                error_log('Id missing in return URL');
-                return $this->httpError(404);
-            }
-
-            $RedirectUrl = "/admin/microbizzapplications/MicrobizzApplication/EditForm/field/MicrobizzApplication/item/" . $ID . "/edit";
-
-            header('Location: ' . $RedirectUrl);
-            exit;
-
-        }
+        parent::init();
         
     }
+
+    public function webhook(){
+
+        $params = $this->getRequest()->params();
+        
+        $id = isset($params['ID']) ? $params['ID'] : false;
+        $otherId = isset($params['OtherID']) ? $params['OtherID'] : false;
+
+        //error_log('Microbizz hook fired with ID: ' . $id . " and OtherID: " . $otherId);
+
+        $microbizzApplication = \MicrobizzApplication::get_by_id($id);
+
+        if (!$microbizzApplication) {
+            error_log('Microbizz application not found');
+            return $this->httpError(200);
+        }
+
+        $microbizzHook = \MicrobizzHook::get_by_id($otherId);
+
+        if (!$microbizzHook) {
+            error_log('Microbizz hook not found');
+            return $this->httpError(200);
+        }
+
+        $microbizzEvent = MicrobizzEvent::create();
+        $microbizzEvent->ModCode = $microbizzHook->ModCode;
+        $microbizzEvent->Hook = $microbizzHook->Hook;
+        $microbizzEvent->MicrobizzApplication = $microbizzApplication->Title;
+        $microbizzEvent->Contract = $microbizzApplication->Contract;
+        $microbizzEvent->MicrobizzApplicationID = $microbizzApplication->ID;
+        $microbizzEvent->MicrobizzHookID = $microbizzHook->ID;
+        $microbizzEvent->POST = json_encode($_POST);
+
+        $object = isset($_POST["object"]) ? $_POST["object"] : false;
+
+        if ($object){
+
+            $todo = json_decode($object);
+            
+            if (isset($todo->id))
+                $microbizzEvent->Todo = $todo->id;
+
+        }
+
+        $microbizzEvent->write();
+
+        if (!empty($microbizzHook->Handle)){
+
+            $handleArray = explode('::', $microbizzHook->Handle);
+            $class = $handleArray[0];
+            $function = $handleArray[1];
+
+            if (class_exists($class) && method_exists($class, $function)){
+
+                $params = [
+                    "application" => $microbizzApplication,
+                    "event" => $microbizzEvent,
+                    "hook" => $microbizzHook,
+                    "endpoint" => $microbizzApplication->EndPoint,
+                    "contract" => $microbizzApplication->Contract,
+                    "apikey" => $microbizzApplication->AccessToken,
+                    "username" => $microbizzApplication->UserName,
+                    "password" => $microbizzApplication->Password,
+                    "accesstoken" => $microbizzApplication->AccessToken
+                ];
+
+                $class::$function($_POST, $params, $microbizzEvent);
+                //error_log("MicrobizzWebhoook handle fired with class: " . $class . " and static method: " . $function);
+
+            }
+
+        }
+        else{
+            error_log('MicrobizzWebhook reached, but no handle was fired');
+        }
+
+    }
+
+    public function interface(){
+
+        $params = $this->getRequest()->params();
+        
+        $id = isset($params['ID']) ? $params['ID'] : false;
+        $otherId = isset($params['OtherID']) ? $params['OtherID'] : false;
+        $sessionToken = isset($_GET['sessiontoken']) ? $_GET['sessiontoken'] : false;
+        $accessToken = isset($_GET['accesstoken']) ? $_GET['accesstoken'] : false;
+
+        $microbizzApplication = \MicrobizzApplication::get_by_id($id);
+
+        if (!$microbizzApplication) {
+            error_log('Microbizz application not found');
+            return $this->httpError(200);
+        }
+
+        //Let's setup the security here
+        $microbizz = new Microbizz(
+            $microbizzApplication->EndPoint, 
+            $microbizzApplication->Contract, 
+            $microbizzApplication->APIKey, 
+            $microbizzApplication->UserName, 
+            $microbizzApplication->Password, 
+            $microbizzApplication->AccessToken);
+        
+        error_log('Validating sessiontoken... ' . $sessionToken);
+
+        $result = $microbizz->validateSessionToken($sessionToken);
+
+        if ($result->body->status != 1){
+            error_log('Sessiontoken not validated... ' . $sessionToken);
+            error_log(json_encode($result));
+            return $this->httpError(200);
+        }
+        else {
+            error_log('Sessiontoken validated... ' . $sessionToken);
+            error_log(json_encode($result));
+            
+        }
+        
+        $microbizzInterface = \MicrobizzInterface::get_by_id($otherId);
+
+        if (!$microbizzInterface) {
+            error_log('Microbizz interface not found');
+            return $this->httpError(200);
+        }
+
+        if (!empty($microbizzInterface->Handle)){
+
+            $handleArray = explode('::', $microbizzInterface->Handle);
+            $class = $handleArray[0];
+            $function = $handleArray[1];
+
+            if (class_exists($class) && method_exists($class, $function)){
+
+                $params = [
+                    "application" => $microbizzApplication,
+                    "sessiontokenresult" => $result->body,
+                    "interface" => $microbizzInterface,
+                    "endpoint" => $microbizzApplication->EndPoint,
+                    "contract" => $microbizzApplication->Contract,
+                    "apikey" => $microbizzApplication->AccessToken,
+                    "username" => $microbizzApplication->UserName,
+                    "password" => $microbizzApplication->Password,
+                    "accesstoken" => $microbizzApplication->AccessToken
+                ];
+
+                return $class::$function($_GET, $params);
+
+            }
+
+        }
+        else{
+            error_log('MicrobizzInterface reached ...');
+            return "MicrobizzInterface reached ...";
+        }
+
+    }
+
+    public function negotiate(){
+
+        $params = $this->getRequest()->params();
+        
+        $ID = isset($params['ID']) ? $params['ID'] : false;
+
+        if (!$ID) {
+            error_log('Id missing in negotiate URL');
+            return $this->httpError(404);
+        }
+
+        $MicrobizzApplication = \MicrobizzApplication::get_by_id($ID);
+
+        if (!$MicrobizzApplication) {
+            error_log('Microbizz application not found');
+            return $this->httpError(404);
+        }
+
+        error_log(json_encode($_POST));
+
+        $endpoint = isset($_POST["endpoint"]) ? $_POST["endpoint"] : false;
+        $contract = isset($_POST["contract"]) ? $_POST["contract"] : false;
+        $accesstoken = isset($_POST["accesstoken"]) ? $_POST["accesstoken"] : false;
+        $challenge = isset($_POST["challenge"]) ? $_POST["challenge"] : false;
+
+        error_log($endpoint);
+        error_log($contract);
+        error_log($accesstoken);
+        error_log($challenge);
+
+        if ($endpoint !== false && $contract !== false && $accesstoken !== false && $challenge !== false) {
+            
+            $MicrobizzApplication->EndPoint = $endpoint;
+            $MicrobizzApplication->Contract = $contract;
+            $MicrobizzApplication->AccessToken = $accesstoken;
+
+            $MicrobizzApplication->write();
+            error_log("Negotiate script succeded");
+            error_log($challenge . $MicrobizzApplication->SecretKey);
+            error_log(sha1($challenge . $MicrobizzApplication->SecretKey));
+
+            return sha1($challenge . $MicrobizzApplication->SecretKey);
+
+        } else {
+
+            error_log('Missing post params from Microbizz');
+            $this->Title = 'Missing post params from Microbizz';
+            return $this->httpError(404);
+
+        }
+
+    }
+
+    public function returnurl(){
+
+        $params = $this->getRequest()->params();
+        
+        $ID = isset($params['ID']) ? $params['ID'] : false;
+
+        if (!$ID) {
+            error_log('Id missing in return URL');
+            return $this->httpError(404);
+        }
+
+        $RedirectUrl = "/admin/microbizzapplications/MicrobizzApplication/EditForm/field/MicrobizzApplication/item/" . $ID . "/edit";
+
+        header('Location: ' . $RedirectUrl);
+        exit;
+
+    }
+    
 }
+
