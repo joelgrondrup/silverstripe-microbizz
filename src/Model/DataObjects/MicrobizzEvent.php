@@ -9,6 +9,8 @@ use SilverStripe\Forms\TextField;
 
 class MicrobizzEvent extends DataObject {
 	
+    private static $table_name = "MicrobizzEvent";
+
     private static $db = array (
         'MicrobizzApplication' => 'Text',
         'MicrobizzApplicationID' => 'Text',

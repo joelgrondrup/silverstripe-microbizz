@@ -10,6 +10,8 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\View\ArrayData;
 
 class MicrobizzHook extends DataObject {
+
+    private static $table_name = "MicrobizzHook";
     
     private static $db = array (
         'Title' => 'Varchar(255)',

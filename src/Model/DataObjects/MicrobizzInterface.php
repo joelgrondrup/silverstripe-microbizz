@@ -8,6 +8,8 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\View\ArrayData;
 
 class MicrobizzInterface extends DataObject {
+
+    private static $table_name = "MicrobizzInterface";
     
     private static $db = array (
         'Title' => 'Varchar(255)',
