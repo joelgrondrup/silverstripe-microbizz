@@ -4,12 +4,13 @@ namespace JoelGrondrup\Microbizz;
 
 use SilverStripe\Admin\ModelAdmin;
 use Colymba\BulkManager\BulkManager;
+use JoelGrondrup\Microbizz\MicrobizzEvent;
 
 class MicrobizzEventModelAdmin extends ModelAdmin 
 {
 
     private static $managed_models = [
-        'MicrobizzEvent'
+        MicrobizzEvent::class,
     ];
 
     private static $url_segment = 'eventlogs';

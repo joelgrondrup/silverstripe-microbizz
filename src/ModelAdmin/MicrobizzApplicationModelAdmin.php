@@ -9,7 +9,7 @@ class MicrobizzApplicationModelAdmin extends ModelAdmin
 {
 
     private static $managed_models = [
-        'MicrobizzApplication'
+        MicrobizzApplication::class,
     ];
 
     private static $url_segment = 'microbizzapplications';
