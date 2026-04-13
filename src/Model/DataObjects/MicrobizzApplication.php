@@ -8,23 +8,9 @@ use MicrobizzHelper;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\PasswordField;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 use SilverStripe\Forms\TextField;
-
-class MicrobizzApplicationModelAdmin extends ModelAdmin 
-{
-
-    private static $managed_models = [
-        'MicrobizzApplication'
-    ];
-
-    private static $url_segment = 'microbizzapplications';
-
-    private static $menu_title = 'Microbizz applications';
-    
-}
 
 class MicrobizzApplication extends DataObject {
     
