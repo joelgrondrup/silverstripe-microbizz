@@ -1,5 +1,7 @@
 <?php
 
+use SilverStripe\Core\Environment;
+
 class MicrobizzHelper {
 
     /**
@@ -45,7 +47,9 @@ class MicrobizzHelper {
             'hooks'        => $hooks
         ];
 
-        return 'https://system.microbizz.dk/appconnect/?request=' . json_encode($requestData);
+        $targetUrl = !empty(Environment::getEnv('MICROBIZZ_TARGET_URL')) ? Environment::getEnv('MICROBIZZ_TARGET_URL') : 'https://system.microbizz.dk/appconnect/';
+
+        return $targetUrl . '?request=' . json_encode($requestData);
     }
 
 }
