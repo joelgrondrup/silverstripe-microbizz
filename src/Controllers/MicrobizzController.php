@@ -107,6 +107,9 @@ class MicrobizzController extends ContentController
         $sessionToken = isset($_GET['sessiontoken']) ? $_GET['sessiontoken'] : false;
         $accessToken = isset($_GET['accesstoken']) ? $_GET['accesstoken'] : false;
 
+        error_log("Interface fired:");
+        error_log(json_encode($_GET));
+
         $microbizzApplication = MicrobizzApplication::get_by_id($id);
 
         if (!$microbizzApplication) {
