@@ -241,7 +241,7 @@ class MicrobizzController extends ContentController
             return $this->httpError(404);
         }
 
-        $RedirectUrl = "/admin/microbizzapplications/MicrobizzApplication/EditForm/field/MicrobizzApplication/item/" . $ID . "/edit";
+        $RedirectUrl = "/admin/microbizzapplications/JoelGrondrup-Microbizz-MicrobizzApplication/EditForm/field/JoelGrondrup-Microbizz-MicrobizzApplication/item/" . $ID . "/edit";
 
         header('Location: ' . $RedirectUrl);
         exit;
