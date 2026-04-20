@@ -73,7 +73,8 @@ class Microbizz  {
 
         $query = [
             "command" => "ValidateSessionToken",
-            "sessiontoken" => $token
+            "sessiontoken" => $token,
+            "is_xnet" => true
         ];
 
         return $this->query($query);
