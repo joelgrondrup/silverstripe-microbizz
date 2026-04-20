@@ -109,6 +109,7 @@ class MicrobizzController extends ContentController
 
         error_log("Interface fired:");
         error_log(json_encode($_GET));
+        error_log(json_encode($_POST));
 
         $microbizzApplication = MicrobizzApplication::get_by_id($id);
 
