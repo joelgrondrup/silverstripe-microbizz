@@ -55,7 +55,7 @@ class MicrobizzInterface extends DataObject {
         foreach ($classes as $classInfo) {
             
             //echo "Class '{$classInfo['class']}' found in {$classInfo['file']}\n";
-            if (is_subclass_of($classInfo['class'], "BaseInterface")) {
+            if (is_subclass_of($classInfo['class'], "JoelGrondrup\Microbizz\BaseInterface")) {
                 
                 $reflectionClass = new ReflectionClass($classInfo['class']);
                 $methods = $reflectionClass->getMethods(ReflectionMethod::IS_STATIC);
