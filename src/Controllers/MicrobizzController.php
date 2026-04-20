@@ -3,6 +3,8 @@
 namespace JoelGrondrup\Microbizz;
 
 use SilverStripe\CMS\Controllers\ContentController;
+use JoelGrondrup\Microbizz\MicrobizzHook;
+use JoelGrondrup\Microbizz\MicrobizzApplication;
 
 class MicrobizzController extends ContentController
 {
@@ -28,14 +30,14 @@ class MicrobizzController extends ContentController
 
         //error_log('Microbizz hook fired with ID: ' . $id . " and OtherID: " . $otherId);
 
-        $microbizzApplication = \MicrobizzApplication::get_by_id($id);
+        $microbizzApplication = MicrobizzApplication::get_by_id($id);
 
         if (!$microbizzApplication) {
             error_log('Microbizz application not found');
             return $this->httpError(200);
         }
 
-        $microbizzHook = \MicrobizzHook::get_by_id($otherId);
+        $microbizzHook = MicrobizzHook::get_by_id($otherId);
 
         if (!$microbizzHook) {
             error_log('Microbizz hook not found');
@@ -105,7 +107,7 @@ class MicrobizzController extends ContentController
         $sessionToken = isset($_GET['sessiontoken']) ? $_GET['sessiontoken'] : false;
         $accessToken = isset($_GET['accesstoken']) ? $_GET['accesstoken'] : false;
 
-        $microbizzApplication = \MicrobizzApplication::get_by_id($id);
+        $microbizzApplication = MicrobizzApplication::get_by_id($id);
 
         if (!$microbizzApplication) {
             error_log('Microbizz application not found');
@@ -136,7 +138,7 @@ class MicrobizzController extends ContentController
             
         }
         
-        $microbizzInterface = \MicrobizzInterface::get_by_id($otherId);
+        $microbizzInterface = MicrobizzInterface::get_by_id($otherId);
 
         if (!$microbizzInterface) {
             error_log('Microbizz interface not found');
@@ -186,7 +188,7 @@ class MicrobizzController extends ContentController
             return $this->httpError(404);
         }
 
-        $MicrobizzApplication = \MicrobizzApplication::get_by_id($ID);
+        $MicrobizzApplication = MicrobizzApplication::get_by_id($ID);
 
         if (!$MicrobizzApplication) {
             error_log('Microbizz application not found');

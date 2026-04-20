@@ -2,15 +2,17 @@
 
 namespace JoelGrondrup\Microbizz;
 
+use MicrobizzHelper;
 use LeKoala\CmsActions\CustomLink;
 use LeKoala\CmsActions\SilverStripeIcons;
-use MicrobizzHelper;
 use SilverStripe\Forms\LiteralField;
 use SilverStripe\Forms\PasswordField;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\Forms\GridField\GridField;
 use SilverStripe\Forms\GridField\GridFieldConfig_RecordEditor;
 use SilverStripe\Forms\TextField;
+use JoelGrondrup\Microbizz\MicrobizzHook;
+use JoelGrondrup\Microbizz\MicrobizzInterface;
 
 class MicrobizzApplication extends DataObject {
     

@@ -6,6 +6,7 @@ use SilverStripe\ORM\DataObject;
 use SilverStripe\Admin\ModelAdmin;
 use SilverStripe\Forms\TextareaField;
 use SilverStripe\Forms\TextField;
+use JoelGrondrup\Microbizz\MicrobizzHook;
 
 class MicrobizzEvent extends DataObject {
 	
