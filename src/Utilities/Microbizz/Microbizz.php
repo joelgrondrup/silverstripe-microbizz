@@ -69,4 +69,15 @@ class Microbizz  {
 
     }
 
+    public function validateSessionToken($token){
+
+        $query = [
+            "command" => "ValidateSessionToken",
+            "sessiontoken" => $token
+        ];
+
+        return $this->query($query);
+
+    }
+
 }
