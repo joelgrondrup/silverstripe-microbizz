@@ -139,7 +139,6 @@ class MicrobizzController extends ContentController
         else {
             error_log('Sessiontoken validated... ' . $sessionToken);
             error_log(json_encode($result));
-            
         }
         
         $microbizzInterface = MicrobizzInterface::get_by_id($otherId);
