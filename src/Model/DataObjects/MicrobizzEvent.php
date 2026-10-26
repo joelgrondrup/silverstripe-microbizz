@@ -34,6 +34,15 @@ class MicrobizzEvent extends DataObject {
         'Hook' => 'Hook',
         'Title' => 'Title'
     );
+
+    private static $searchable_fields = [
+        'Created',
+        'Contract',
+        'ModCode',
+        'Hook',
+        'Title',
+        'Log'
+    ];
 	
     private static $default_sort = "Created DESC";
     
