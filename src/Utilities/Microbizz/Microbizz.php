@@ -3,7 +3,7 @@
 namespace JoelGrondrup\Microbizz;
 
 
-use \Httpful\Request;
+use GuzzleHttp\Client;
 
 class Microbizz  {
 
@@ -50,13 +50,17 @@ class Microbizz  {
 
         $bodyString = "json=" . urlencode($string);
 
-        $response = Request::post($this->endpoint)
-            ->expectsJson()
-            ->addHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
-            ->body($bodyString)
-            ->send();
+        // http_errors off: like Httpful, an error status is returned to the caller, not thrown.
+        $response = (new Client())->post($this->endpoint, [
+            'headers' => [
+                'Content-Type' => 'application/x-www-form-urlencoded; charset=UTF-8',
+                'Accept' => 'application/json',
+            ],
+            'body' => $bodyString,
+            'http_errors' => false,
+        ]);
 
-        return $response;
+        return new MicrobizzResponse($response);
 
     }
 
