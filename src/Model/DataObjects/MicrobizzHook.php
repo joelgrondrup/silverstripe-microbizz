@@ -5,9 +5,9 @@ namespace JoelGrondrup\Microbizz;
 use ReflectionClass;
 use ReflectionMethod;
 use SilverStripe\Forms\DropdownField;
-use SilverStripe\ORM\ArrayList;
+use SilverStripe\Model\List\ArrayList;
 use SilverStripe\ORM\DataObject;
-use SilverStripe\View\ArrayData;
+use SilverStripe\Model\ArrayData;
 
 class MicrobizzHook extends DataObject {
 
