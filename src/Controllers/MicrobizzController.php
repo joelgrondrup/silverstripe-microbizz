@@ -57,10 +57,10 @@ class MicrobizzController extends ContentController
 
         if ($object){
 
-            $todo = json_decode($object);
+            $decodedObject = json_decode($object);
             
-            if (isset($todo->id))
-                $microbizzEvent->Todo = $todo->id;
+            if (isset($decodedObject->id))
+                $microbizzEvent->ObjectID = $decodedObject->id;
 
         }
 

@@ -20,7 +20,9 @@ class MicrobizzEvent extends DataObject {
         'Contract' => 'Text',
         'POST' => 'Text',
         'Log' => 'Text',
-        'Title' => 'Text'
+        'Title' => 'Text',
+        // id of the todo/customer/... the webhook is about
+        'ObjectID' => 'Int'
     );
 	
     private static $has_one = [
@@ -32,6 +34,7 @@ class MicrobizzEvent extends DataObject {
         'Contract' => 'Contract',
         'ModCode' => 'Type',
         'Hook' => 'Hook',
+        'ObjectID' => 'Object ID',
         'Title' => 'Title'
     );
 
@@ -41,6 +44,7 @@ class MicrobizzEvent extends DataObject {
         'ModCode',
         'Hook',
         'Title',
+        'ObjectID',
         'Log'
     ];
 	
