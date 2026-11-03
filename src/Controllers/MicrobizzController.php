@@ -49,7 +49,8 @@ class MicrobizzController extends ContentController
         $microbizzEvent->Hook = $microbizzHook->Hook;
         $microbizzEvent->MicrobizzApplication = $microbizzApplication->Title;
         $microbizzEvent->Contract = $microbizzApplication->Contract;
-        $microbizzEvent->MicrobizzApplicationID = $microbizzApplication->ID;
+        // MicrobizzApplicationID is a Text field, and Silverstripe 6 rejects non-strings on write.
+        $microbizzEvent->MicrobizzApplicationID = (string) $microbizzApplication->ID;
         $microbizzEvent->MicrobizzHookID = $microbizzHook->ID;
         $microbizzEvent->POST = json_encode($_POST);
 
