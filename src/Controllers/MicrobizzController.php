@@ -101,18 +101,40 @@ class MicrobizzController extends ContentController
 
     public function interface(){
 
+        // Interface pages are personal (per user, per session token): never let the app's
+        // web view or a proxy cache them. Clients that put the token in the path got a
+        // cached empty page back as "304 Not Modified" over and over.
+        \SilverStripe\Control\Middleware\HTTPCacheControlMiddleware::singleton()->disableCache(true);
+
         $params = $this->getRequest()->params();
-        
+
+        // Query parameters, wherever the Microbizz app put them. Some app versions append
+        // "&sessiontoken=..." to the interface URL without a "?", which lands the whole
+        // query inside the last path segment (OtherID = "8&sessiontoken=..."). Split such
+        // a tail off and parse it; the regular query string and POST still win.
+        $extra = [];
+        foreach (['ID', 'OtherID'] as $key) {
+            if (isset($params[$key]) && preg_match('/^(\d+)[&;?](.*)$/s', (string)$params[$key], $match)) {
+                $params[$key] = $match[1];
+                parse_str($match[2], $parsed);
+                $extra = array_merge($extra, $parsed);
+            }
+        }
+        $query = array_merge($extra, $_POST, $_GET);
+
         $id = isset($params['ID']) ? $params['ID'] : false;
         $otherId = isset($params['OtherID']) ? $params['OtherID'] : false;
-        $sessionToken = isset($_GET['sessiontoken']) ? $_GET['sessiontoken'] : false;
-        $accessToken = isset($_GET['accesstoken']) ? $_GET['accesstoken'] : false;
+        $sessionToken = isset($query['sessiontoken']) ? $query['sessiontoken'] : false;
 
-        error_log("Interface fired:");
-        error_log(json_encode($_GET));
-        error_log(json_encode($_POST));
+        // The URL shape and parameter names only — never the values (the session token).
+        $path = preg_replace('/(sessiontoken|accesstoken)=[^&\/]*/i', '$1=***', (string)($_SERVER['REQUEST_URI'] ?? ''));
+        error_log('Interface fired: ' . $path
+            . ' · GET ' . implode(',', array_keys($_GET))
+            . ' · POST ' . implode(',', array_keys($_POST))
+            . ($extra ? ' · fra stien: ' . implode(',', array_keys($extra)) : '')
+            . ' · UA ' . substr((string)($_SERVER['HTTP_USER_AGENT'] ?? ''), 0, 120));
 
-        $microbizzApplication = MicrobizzApplication::get_by_id($id);
+        $microbizzApplication = MicrobizzApplication::get_by_id((int)$id);
 
         if (!$microbizzApplication) {
             error_log('Microbizz application not found');
@@ -128,21 +150,30 @@ class MicrobizzController extends ContentController
             $microbizzApplication->Password, 
             $microbizzApplication->AccessToken);
         
-        error_log('Validating sessiontoken... ' . $sessionToken);
+        // Never log the token itself: anyone with the log could reuse it until it expires.
+        if (!$sessionToken) {
+            error_log('Sessiontoken missing in request');
+            return $this->httpError(403, 'Mangler login fra Microbizz (sessiontoken).');
+        }
 
         $result = $microbizz->validateSessionToken($sessionToken);
 
-        if ($result->body->status != 1){
-            error_log('Sessiontoken not validated... ' . $sessionToken);
-            error_log(json_encode($result));
-            return $this->httpError(200);
+        // status 1 only means the API call worked; the token is valid only when the
+        // command result says so ("result": true). An invalid token still comes back
+        // with status 1 and some userid, so status alone must never be trusted.
+        $tokenResult = $result->body->results[0] ?? null;
+        $tokenValid = isset($result->body->status) && $result->body->status == 1
+            && isset($tokenResult->status) && $tokenResult->status == 1
+            && isset($tokenResult->result) && in_array($tokenResult->result, [true, 1, '1'], true);
+
+        if (!$tokenValid){
+            error_log('Sessiontoken not validated: ' . json_encode($result->body ?? null));
+            return $this->httpError(403, 'Login fra Microbizz kunne ikke bekræftes.');
         }
-        else {
-            error_log('Sessiontoken validated... ' . $sessionToken);
-            error_log(json_encode($result));
-        }
-        
-        $microbizzInterface = MicrobizzInterface::get_by_id($otherId);
+
+        error_log('Sessiontoken validated for user ' . ($tokenResult->userid ?? '?'));
+
+        $microbizzInterface = MicrobizzInterface::get_by_id((int)$otherId);
 
         if (!$microbizzInterface) {
             error_log('Microbizz interface not found');
@@ -169,7 +200,7 @@ class MicrobizzController extends ContentController
                     "accesstoken" => $microbizzApplication->AccessToken
                 ];
 
-                return $class::$function($_GET, $params);
+                return $class::$function($query, $params);
 
             }
 
